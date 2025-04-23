@@ -33,8 +33,8 @@
         <name>CustomObject</name>
     </types>
     <types>
-        <members>Job_Application_Event__c</members>
-        <name>CustomObject</name>
+        <members>Job_Application_Status_Flows</members>
+        <name>Flow</name>
     </types>
     <types>
         <members>*</members>
