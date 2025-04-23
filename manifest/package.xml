@@ -33,6 +33,10 @@
         <name>CustomObject</name>
     </types>
     <types>
+        <members>Job_Application_Event__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
         <members>*</members>
         <name>StaticResource</name>
     </types>

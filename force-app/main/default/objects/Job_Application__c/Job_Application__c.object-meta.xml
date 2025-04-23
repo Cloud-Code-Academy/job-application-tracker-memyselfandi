@@ -142,7 +142,7 @@
     </actionOverrides>
     <allowInChatterGroups>false</allowInChatterGroups>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
-    <deploymentStatus>InDevelopment</deploymentStatus>
+    <deploymentStatus>Deployed</deploymentStatus>
     <description>This capstone project is a comprehensive solution that keeps track of job applications for users in Salesforce. It will demonstrate your proficiency in various aspects of Salesforce development, from basic programming concepts and classes to asynchronous Apex, LWC, and integrations. The goal is to be able to track job applications that are found on multiple job boards/sites and synthesize relevant components into one location. This system should manage the entire job application lifecycle.</description>
     <enableActivities>true</enableActivities>
     <enableBulkApi>false</enableBulkApi>
