@@ -19,15 +19,15 @@
             </value>
         </inputParameters>
         <inputParameters>
-            <name>WhatId</name>
+            <name>contextId</name>
             <value>
-                <stringValue>$Record.Id</stringValue>
+                <elementReference>recordId</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
             <name>Status</name>
             <value>
-                <stringValue>Open</stringValue>
+                <stringValue>Not Started</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -39,7 +39,7 @@
         <inputParameters>
             <name>OwnerId</name>
             <value>
-                <stringValue>$Record.CreatedById</stringValue>
+                <elementReference>recordOwnerId</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
@@ -69,15 +69,15 @@
             </value>
         </inputParameters>
         <inputParameters>
-            <name>WhatId</name>
+            <name>contextId</name>
             <value>
-                <stringValue>$Record.Id</stringValue>
+                <elementReference>recordId</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
             <name>Status</name>
             <value>
-                <stringValue>Open</stringValue>
+                <stringValue>Not Started</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -89,7 +89,7 @@
         <inputParameters>
             <name>OwnerId</name>
             <value>
-                <stringValue>$Record.CreatedById</stringValue>
+                <elementReference>recordOwnerId</elementReference>
             </value>
         </inputParameters>
         <nameSegment>NewTask</nameSegment>
@@ -110,15 +110,15 @@
             </value>
         </inputParameters>
         <inputParameters>
-            <name>WhatId</name>
+            <name>contextId</name>
             <value>
-                <stringValue>$Record.Id</stringValue>
+                <elementReference>recordId</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
             <name>Status</name>
             <value>
-                <stringValue>Open</stringValue>
+                <stringValue>Not Started</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -130,7 +130,7 @@
         <inputParameters>
             <name>OwnerId</name>
             <value>
-                <stringValue>$Record.CreatedById</stringValue>
+                <elementReference>recordOwnerId</elementReference>
             </value>
         </inputParameters>
         <nameSegment>NewTask</nameSegment>
@@ -154,15 +154,15 @@
             </value>
         </inputParameters>
         <inputParameters>
-            <name>WhatId</name>
+            <name>contextId</name>
             <value>
-                <stringValue>$Record.Id</stringValue>
+                <elementReference>recordId</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
             <name>Status</name>
             <value>
-                <stringValue>Open</stringValue>
+                <stringValue>Not Started</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -180,7 +180,7 @@
         <inputParameters>
             <name>OwnerId</name>
             <value>
-                <stringValue>$Record.CreatedById</stringValue>
+                <elementReference>recordOwnerId</elementReference>
             </value>
         </inputParameters>
         <nameSegment>NewTask</nameSegment>
@@ -201,15 +201,15 @@
             </value>
         </inputParameters>
         <inputParameters>
-            <name>WhatId</name>
+            <name>contextId</name>
             <value>
-                <stringValue>$Record.Id</stringValue>
+                <elementReference>recordId</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
             <name>Status</name>
             <value>
-                <stringValue>Open</stringValue>
+                <stringValue>Not Started</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -221,7 +221,7 @@
         <inputParameters>
             <name>OwnerId</name>
             <value>
-                <stringValue>$Record.CreatedById</stringValue>
+                <elementReference>recordOwnerId</elementReference>
             </value>
         </inputParameters>
         <nameSegment>NewTask</nameSegment>
@@ -245,15 +245,15 @@
             </value>
         </inputParameters>
         <inputParameters>
-            <name>WhatId</name>
+            <name>contextId</name>
             <value>
-                <stringValue>$Record.Id</stringValue>
+                <elementReference>recordId</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
             <name>Status</name>
             <value>
-                <stringValue>Open</stringValue>
+                <stringValue>Not Started</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -265,7 +265,7 @@
         <inputParameters>
             <name>OwnerId</name>
             <value>
-                <elementReference>$Record.CreatedById</elementReference>
+                <elementReference>recordOwnerId</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
@@ -295,15 +295,15 @@
             </value>
         </inputParameters>
         <inputParameters>
-            <name>WhatId</name>
+            <name>contextId</name>
             <value>
-                <stringValue>$Record.Id</stringValue>
+                <elementReference>recordId</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
             <name>Status</name>
             <value>
-                <stringValue>Open</stringValue>
+                <stringValue>Not Started</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -315,7 +315,7 @@
         <inputParameters>
             <name>OwnerId</name>
             <value>
-                <stringValue>$Record.CreatedById</stringValue>
+                <elementReference>recordOwnerId</elementReference>
             </value>
         </inputParameters>
         <nameSegment>NewTask</nameSegment>
@@ -380,15 +380,15 @@
             </value>
         </inputParameters>
         <inputParameters>
-            <name>WhatId</name>
+            <name>contextId</name>
             <value>
-                <stringValue>$Record.Id</stringValue>
+                <elementReference>recordId</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
             <name>Status</name>
             <value>
-                <stringValue>Open</stringValue>
+                <stringValue>Not Started</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -400,7 +400,7 @@
         <inputParameters>
             <name>OwnerId</name>
             <value>
-                <stringValue>$Record.CreatedById</stringValue>
+                <elementReference>recordOwnerId</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
@@ -518,15 +518,15 @@
             </value>
         </inputParameters>
         <inputParameters>
-            <name>WhatId</name>
+            <name>contextId</name>
             <value>
-                <stringValue>$Record.Id</stringValue>
+                <elementReference>recordId</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
             <name>Status</name>
             <value>
-                <stringValue>Open</stringValue>
+                <stringValue>Not Started</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -538,7 +538,7 @@
         <inputParameters>
             <name>OwnerId</name>
             <value>
-                <stringValue>$Record.CreatedById</stringValue>
+                <elementReference>recordOwnerId</elementReference>
             </value>
         </inputParameters>
         <nameSegment>NewTask</nameSegment>
@@ -562,15 +562,15 @@
             </value>
         </inputParameters>
         <inputParameters>
-            <name>WhatId</name>
+            <name>contextId</name>
             <value>
-                <stringValue>{!$Record.Id}  </stringValue>
+                <elementReference>recordId</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
             <name>Status</name>
             <value>
-                <stringValue>Open</stringValue>
+                <stringValue>Not Started</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -582,7 +582,7 @@
         <inputParameters>
             <name>OwnerId</name>
             <value>
-                <elementReference>$Record.CreatedById</elementReference>
+                <elementReference>recordOwnerId</elementReference>
             </value>
         </inputParameters>
         <nameSegment>NewTask</nameSegment>
@@ -606,15 +606,15 @@
             </value>
         </inputParameters>
         <inputParameters>
-            <name>WhatId</name>
+            <name>contextId</name>
             <value>
-                <stringValue>$Record.Id</stringValue>
+                <elementReference>recordId</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
             <name>Status</name>
             <value>
-                <stringValue>Open</stringValue>
+                <stringValue>Not Started</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -626,7 +626,7 @@
         <inputParameters>
             <name>OwnerId</name>
             <value>
-                <stringValue>$Record.CreatedById</stringValue>
+                <elementReference>recordOwnerId</elementReference>
             </value>
         </inputParameters>
         <nameSegment>NewTask</nameSegment>
@@ -650,15 +650,15 @@
             </value>
         </inputParameters>
         <inputParameters>
-            <name>WhatId</name>
+            <name>contextId</name>
             <value>
-                <stringValue>$Record.Id</stringValue>
+                <elementReference>recordId</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
             <name>Status</name>
             <value>
-                <stringValue>open</stringValue>
+                <stringValue>Not Started</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -670,7 +670,7 @@
         <inputParameters>
             <name>OwnerId</name>
             <value>
-                <stringValue>$Record.CreatedById</stringValue>
+                <elementReference>recordOwnerId</elementReference>
             </value>
         </inputParameters>
         <nameSegment>NewTask</nameSegment>
@@ -691,15 +691,15 @@
             </value>
         </inputParameters>
         <inputParameters>
-            <name>WhatId</name>
+            <name>contextId</name>
             <value>
-                <stringValue> {!$Record.Id} </stringValue>
+                <elementReference>recordId</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
             <name>Status</name>
             <value>
-                <stringValue>Open</stringValue>
+                <stringValue>Not Started</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -711,7 +711,7 @@
         <inputParameters>
             <name>OwnerId</name>
             <value>
-                <stringValue>{!$Record.CreatedById} </stringValue>
+                <elementReference>recordOwnerId</elementReference>
             </value>
         </inputParameters>
         <nameSegment>NewTask</nameSegment>
@@ -735,27 +735,27 @@
             </value>
         </inputParameters>
         <inputParameters>
-            <name>WhatId</name>
+            <name>contextId</name>
             <value>
-                <stringValue>{!$Record.Id} </stringValue>
+                <elementReference>recordId</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
             <name>Status</name>
             <value>
-                <stringValue>Open</stringValue>
+                <stringValue>Not Started</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
             <name>Priority</name>
             <value>
-                <stringValue> Normal </stringValue>
+                <stringValue>Normal</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
             <name>OwnerId</name>
             <value>
-                <elementReference>$Record.CreatedById</elementReference>
+                <elementReference>recordOwnerId</elementReference>
             </value>
         </inputParameters>
         <nameSegment>NewTask</nameSegment>
@@ -779,27 +779,27 @@
             </value>
         </inputParameters>
         <inputParameters>
-            <name>WhatId</name>
+            <name>contextId</name>
             <value>
-                <stringValue>{!$Record.Id} </stringValue>
+                <elementReference>recordId</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
             <name>Status</name>
             <value>
-                <stringValue>Open</stringValue>
+                <stringValue>Not Started</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
             <name>Priority</name>
             <value>
-                <stringValue>Normal </stringValue>
+                <stringValue>Normal</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
             <name>OwnerId</name>
             <value>
-                <stringValue>{!$Record.CreatedById} </stringValue>
+                <elementReference>recordOwnerId</elementReference>
             </value>
         </inputParameters>
         <nameSegment>NewTask</nameSegment>
@@ -823,27 +823,27 @@
             </value>
         </inputParameters>
         <inputParameters>
-            <name>WhatId</name>
+            <name>contextId</name>
             <value>
-                <stringValue> {!$Record.Id} </stringValue>
+                <elementReference>recordId</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
             <name>Status</name>
             <value>
-                <stringValue>Open</stringValue>
+                <stringValue>Not Started</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
             <name>Priority</name>
             <value>
-                <stringValue> Normal</stringValue>
+                <stringValue>Normal</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
             <name>OwnerId</name>
             <value>
-                <elementReference>$Record.CreatedById</elementReference>
+                <elementReference>recordOwnerId</elementReference>
             </value>
         </inputParameters>
         <nameSegment>NewTask</nameSegment>
@@ -864,15 +864,15 @@
             </value>
         </inputParameters>
         <inputParameters>
-            <name>WhatId</name>
+            <name>contextId</name>
             <value>
-                <stringValue>$Record.Id</stringValue>
+                <elementReference>recordId</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
             <name>Status</name>
             <value>
-                <stringValue>Open</stringValue>
+                <stringValue>Not Started</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -884,7 +884,7 @@
         <inputParameters>
             <name>OwnerId</name>
             <value>
-                <stringValue>$Record.CreatedById</stringValue>
+                <elementReference>recordOwnerId</elementReference>
             </value>
         </inputParameters>
         <nameSegment>NewTask</nameSegment>
@@ -949,15 +949,15 @@
             </value>
         </inputParameters>
         <inputParameters>
-            <name>WhatId</name>
+            <name>contextId</name>
             <value>
-                <stringValue>$Record.Id</stringValue>
+                <elementReference>recordId</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
             <name>Status</name>
             <value>
-                <stringValue>Open</stringValue>
+                <stringValue>Not Started</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -969,7 +969,7 @@
         <inputParameters>
             <name>OwnerId</name>
             <value>
-                <stringValue>$Record.CreatedById</stringValue>
+                <elementReference>recordOwnerId</elementReference>
             </value>
         </inputParameters>
         <nameSegment>NewTask</nameSegment>
@@ -993,15 +993,15 @@
             </value>
         </inputParameters>
         <inputParameters>
-            <name>WhatId</name>
+            <name>contextId</name>
             <value>
-                <stringValue> {!$Record.Id} </stringValue>
+                <elementReference>recordId</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
             <name>Status</name>
             <value>
-                <stringValue>Open</stringValue>
+                <stringValue>Not Started</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -1013,7 +1013,7 @@
         <inputParameters>
             <name>OwnerId</name>
             <value>
-                <stringValue>{!$Record.CreatedById} </stringValue>
+                <elementReference>recordOwnerId</elementReference>
             </value>
         </inputParameters>
         <nameSegment>NewTask</nameSegment>
@@ -1078,27 +1078,27 @@
             </value>
         </inputParameters>
         <inputParameters>
-            <name>WhatId</name>
+            <name>contextId</name>
             <value>
-                <elementReference>$Record.Id</elementReference>
+                <elementReference>recordId</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
             <name>Status</name>
             <value>
-                <stringValue> Open</stringValue>
+                <stringValue>Open</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
             <name>Priority</name>
             <value>
-                <stringValue>Normal </stringValue>
+                <stringValue>Normal</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
             <name>OwnerId</name>
             <value>
-                <elementReference>$Record.CreatedById</elementReference>
+                <elementReference>recordOwnerId</elementReference>
             </value>
         </inputParameters>
         <nameSegment>NewTask</nameSegment>
@@ -1121,13 +1121,7 @@
                     <stringValue>Applying</stringValue>
                 </rightValue>
             </conditions>
-            <conditions>
-                <leftValueReference>$Record.Status__c</leftValueReference>
-                <operator>IsChanged</operator>
-                <rightValue>
-                    <booleanValue>true</booleanValue>
-                </rightValue>
-            </conditions>
+            
             <connector>
                 <targetReference>Find_Someone_at_the_Company</targetReference>
             </connector>
@@ -1143,13 +1137,7 @@
                     <stringValue>Applied</stringValue>
                 </rightValue>
             </conditions>
-            <conditions>
-                <leftValueReference>$Record.Status__c</leftValueReference>
-                <operator>IsChanged</operator>
-                <rightValue>
-                    <booleanValue>true</booleanValue>
-                </rightValue>
-            </conditions>
+            
             <connector>
                 <targetReference>Reach_out_to_the_hiring_manager_or_recruiter_Applied</targetReference>
             </connector>
@@ -1165,13 +1153,7 @@
                     <stringValue>Interviewing</stringValue>
                 </rightValue>
             </conditions>
-            <conditions>
-                <leftValueReference>$Record.Status__c</leftValueReference>
-                <operator>IsChanged</operator>
-                <rightValue>
-                    <booleanValue>true</booleanValue>
-                </rightValue>
-            </conditions>
+            
             <connector>
                 <targetReference>Create_Prepare_for_Interview_Task</targetReference>
             </connector>
@@ -1184,16 +1166,10 @@
                 <leftValueReference>$Record.Status__c</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
-                    <stringValue>Negotiating,</stringValue>
+                    <stringValue>Negotiating</stringValue>
                 </rightValue>
             </conditions>
-            <conditions>
-                <leftValueReference>$Record.Status__c</leftValueReference>
-                <operator>IsChanged</operator>
-                <rightValue>
-                    <booleanValue>true</booleanValue>
-                </rightValue>
-            </conditions>
+            
             <connector>
                 <targetReference>Create_Review_Offer_Task_Negotiating</targetReference>
             </connector>
@@ -1209,13 +1185,7 @@
                     <stringValue>Accepted</stringValue>
                 </rightValue>
             </conditions>
-            <conditions>
-                <leftValueReference>$Record.Status__c</leftValueReference>
-                <operator>IsChanged</operator>
-                <rightValue>
-                    <booleanValue>true</booleanValue>
-                </rightValue>
-            </conditions>
+            
             <connector>
                 <targetReference>Plan_your_resignation_if_applicable</targetReference>
             </connector>
@@ -1231,13 +1201,7 @@
                     <stringValue>Saved</stringValue>
                 </rightValue>
             </conditions>
-            <conditions>
-                <leftValueReference>$Record.Status__c</leftValueReference>
-                <operator>IsChanged</operator>
-                <rightValue>
-                    <booleanValue>true</booleanValue>
-                </rightValue>
-            </conditions>
+            
             <connector>
                 <targetReference>Check_Job_Description_Saved</targetReference>
             </connector>
@@ -1253,13 +1217,7 @@
                     <stringValue>Closed</stringValue>
                 </rightValue>
             </conditions>
-            <conditions>
-                <leftValueReference>$Record.Status__c</leftValueReference>
-                <operator>IsChanged</operator>
-                <rightValue>
-                    <booleanValue>true</booleanValue>
-                </rightValue>
-            </conditions>
+            
             <connector>
                 <targetReference>Send_a_follow_up_email_thanking_the_interviewer_Closed</targetReference>
             </connector>
@@ -1325,23 +1283,18 @@
         <connector>
             <targetReference>Check_Application_Status</targetReference>
         </connector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>Status__c</field>
-            <operator>EqualTo</operator>
-            <value>
-                <stringValue>Applying</stringValue>
-            </value>
-        </filters>
-        <filters>
-            <field>Status__c</field>
-            <operator>IsChanged</operator>
-            <value>
-                <booleanValue>true</booleanValue>
-            </value>
-        </filters>
+        <filterFormula>OR(
+    ISCHANGED({!$Record.Status__c}),
+    ISPICKVAL({!$Record.Status__c}, &quot;Applying&quot;),
+    ISPICKVAL({!$Record.Status__c}, &quot;Applied&quot;),
+    ISPICKVAL({!$Record.Status__c}, &quot;Interviewing&quot;),
+    ISPICKVAL({!$Record.Status__c}, &quot;Negotiating&quot;),
+    ISPICKVAL({!$Record.Status__c}, &quot;Accepted&quot;),
+    ISPICKVAL({!$Record.Status__c}, &quot;Saved&quot;),
+    ISPICKVAL({!$Record.Status__c}, &quot;Closed&quot;)
+)</filterFormula>
         <object>Job_Application__c</object>
-        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <recordTriggerType>Update</recordTriggerType>
         <triggerType>RecordAfterSave</triggerType>
     </start>
     <status>Active</status>
