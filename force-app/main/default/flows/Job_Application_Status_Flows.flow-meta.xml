@@ -1072,21 +1072,21 @@
         </connector>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
-            <name>Subject</name>
-            <value>
-                <stringValue>Take some time to relax and recharge - Plan Time off</stringValue>
-            </value>
-        </inputParameters>
-        <inputParameters>
             <name>contextId</name>
             <value>
                 <elementReference>recordId</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
+            <name>Subject</name>
+            <value>
+                <stringValue>Take some time to relax and recharge - Plan Time off</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
             <name>Status</name>
             <value>
-                <stringValue>Open</stringValue>
+                <stringValue>Not Started</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -1121,7 +1121,6 @@
                     <stringValue>Applying</stringValue>
                 </rightValue>
             </conditions>
-            
             <connector>
                 <targetReference>Find_Someone_at_the_Company</targetReference>
             </connector>
@@ -1137,7 +1136,6 @@
                     <stringValue>Applied</stringValue>
                 </rightValue>
             </conditions>
-            
             <connector>
                 <targetReference>Reach_out_to_the_hiring_manager_or_recruiter_Applied</targetReference>
             </connector>
@@ -1153,7 +1151,6 @@
                     <stringValue>Interviewing</stringValue>
                 </rightValue>
             </conditions>
-            
             <connector>
                 <targetReference>Create_Prepare_for_Interview_Task</targetReference>
             </connector>
@@ -1169,7 +1166,6 @@
                     <stringValue>Negotiating</stringValue>
                 </rightValue>
             </conditions>
-            
             <connector>
                 <targetReference>Create_Review_Offer_Task_Negotiating</targetReference>
             </connector>
@@ -1185,7 +1181,6 @@
                     <stringValue>Accepted</stringValue>
                 </rightValue>
             </conditions>
-            
             <connector>
                 <targetReference>Plan_your_resignation_if_applicable</targetReference>
             </connector>
@@ -1201,7 +1196,6 @@
                     <stringValue>Saved</stringValue>
                 </rightValue>
             </conditions>
-            
             <connector>
                 <targetReference>Check_Job_Description_Saved</targetReference>
             </connector>
@@ -1217,7 +1211,6 @@
                     <stringValue>Closed</stringValue>
                 </rightValue>
             </conditions>
-            
             <connector>
                 <targetReference>Send_a_follow_up_email_thanking_the_interviewer_Closed</targetReference>
             </connector>
