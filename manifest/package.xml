@@ -33,13 +33,9 @@
         <name>CustomObject</name>
     </types>
     <types>
-        <members>Job_Application_Status_Flows</members>
-        <name>Flow</name>
-    </types>
-    <types>
-        <members>Primary_Contact_Flow</members>
-        <name>Flow</name>
-    </types>
+        <members>Contact</members>
+        <name>CustomObject</name>
+    </types>    
     <types>
         <members>*</members>
         <name>StaticResource</name>
