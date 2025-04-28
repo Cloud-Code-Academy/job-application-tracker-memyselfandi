@@ -38,9 +38,9 @@
                 <label>Interviewing</label>
             </value>
             <value>
-                <fullName>Negotiating,</fullName>
+                <fullName>Negotiating</fullName>
                 <default>false</default>
-                <label>Negotiating,</label>
+                <label>Negotiating</label>
             </value>
             <value>
                 <fullName>Saved</fullName>

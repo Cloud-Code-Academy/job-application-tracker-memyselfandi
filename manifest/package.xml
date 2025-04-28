@@ -37,6 +37,10 @@
         <name>Flow</name>
     </types>
     <types>
+        <members>Primary_Contact_Flow</members>
+        <name>Flow</name>
+    </types>
+    <types>
         <members>*</members>
         <name>StaticResource</name>
     </types>
