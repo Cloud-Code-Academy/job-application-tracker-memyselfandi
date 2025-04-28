@@ -315,7 +315,47 @@ public class JobApplicationTriggerHandler {
     // Specific handler for 'Negotiating' Status
     private static void handleNegotiating(Job_Application__c jobApp) {
         System.debug('Handling Negotiating status for Job Application: ' + jobApp.Id);
-        // Add specific logic for Negotiating status
+        List<Task> tasksToInsert = new List<Task>();
+
+        // Task 1: Research your market value and know your numbers
+        Task task1 = new Task(
+            WhatId = jobApp.Id,
+            OwnerId = jobApp.OwnerId,
+            Subject = 'Research Market Value',
+            Description = 'Research your market value and know your numbers',
+            Status = 'Not Started',
+            Priority = 'Normal',
+            ActivityDate = Date.today().addDays(4) // Set Due Date to 4 days from today
+        );
+        tasksToInsert.add(task1);
+
+        // Task 2: Prepare your negotiation scripts
+        Task task2 = new Task(
+            WhatId = jobApp.Id,
+            OwnerId = jobApp.OwnerId,
+            Subject = 'Prepare Negotiation Scripts',
+            Description = 'Prepare your negotiation scripts',
+            Status = 'Not Started',
+            Priority = 'Normal',
+            ActivityDate = Date.today().addDays(4) // Set Due Date to 4 days from today
+        );
+        tasksToInsert.add(task2);
+
+        // Task 3: Evaluate your offer and decline or accept
+        Task task3 = new Task(
+            WhatId = jobApp.Id,
+            OwnerId = jobApp.OwnerId,
+            Subject = 'Evaluate Offer',
+            Description = 'Evaluate your offer and decline or accept',
+            Status = 'Not Started',
+            Priority = 'Normal',
+            ActivityDate = Date.today().addDays(4) // Set Due Date to 4 days from today
+        );
+        tasksToInsert.add(task3);
+
+        if (!tasksToInsert.isEmpty()) {
+            insert tasksToInsert;
+        }
     }
 
     // Specific handler for 'Accepted' Status
