@@ -70,20 +70,20 @@ public class JobApplicationTriggerHandler {
     private static void handleSaved(Job_Application__c jobApp) {
         System.debug('Handling Saved status for Job Application: ' + jobApp.Id);
         /**Primary Contact Check Section */
-         // Check if Primary Contact is currently not set
+        // Check if Primary Contact is currently not set
         if (jobApp.Primary_Contact__c == null) {
             System.debug('Primary Contact is empty. Attempting to auto-assign...');
 
             // Ensure that the Job Application is related to an Account
-            if (jobApp.Account__c != null) {
+            if (jobApp.Company_Name__c != null) {
                 // Query the first Contact on the Account with Contact_Type__c = 'Primary Contact',
-                // ordered by CreatedDate descending (newest first)
+                // ordered by CreatedDate ascending (oldest first)
                 List<Contact> contacts = [
                     SELECT Id, Name
                     FROM Contact
-                    WHERE AccountId = :jobApp.Account__c
+                    WHERE AccountId = :jobApp.Company_Name__c
                     AND Contact_Type__c = 'Primary Contact'
-                    ORDER BY CreatedDate DSC
+                    ORDER BY CreatedDate DESC
                     LIMIT 1
                 ];
 
@@ -93,7 +93,7 @@ public class JobApplicationTriggerHandler {
                     System.debug('Auto-assigned Primary Contact: ' + contacts[0].Id);
                 } else {
                     // No matching Primary Contact found on the Account
-                    System.debug('No Primary Contact found on Account: ' + jobApp.Account__c);
+                    System.debug('No Primary Contact found on Account: ' + jobApp.Company_Name__c);
                 }
             } else {
                 // The Job Application does not have a related Account
