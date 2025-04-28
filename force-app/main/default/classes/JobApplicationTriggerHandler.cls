@@ -69,7 +69,38 @@ public class JobApplicationTriggerHandler {
     // Specific handler for 'Saved' Status
     private static void handleSaved(Job_Application__c jobApp) {
         System.debug('Handling Saved status for Job Application: ' + jobApp.Id);
+        /**Primary Contact Check Section */
+         // Check if Primary Contact is currently not set
+        if (jobApp.Primary_Contact__c == null) {
+            System.debug('Primary Contact is empty. Attempting to auto-assign...');
 
+            // Ensure that the Job Application is related to an Account
+            if (jobApp.Account__c != null) {
+                // Query the first Contact on the Account with Contact_Type__c = 'Primary Contact',
+                // ordered by CreatedDate descending (newest first)
+                List<Contact> contacts = [
+                    SELECT Id, Name
+                    FROM Contact
+                    WHERE AccountId = :jobApp.Account__c
+                    AND Contact_Type__c = 'Primary Contact'
+                    ORDER BY CreatedDate DSC
+                    LIMIT 1
+                ];
+
+                // If a matching Contact was found, assign it to the Primary Contact field
+                if (!contacts.isEmpty()) {
+                    jobApp.Primary_Contact__c = contacts[0].Id;
+                    System.debug('Auto-assigned Primary Contact: ' + contacts[0].Id);
+                } else {
+                    // No matching Primary Contact found on the Account
+                    System.debug('No Primary Contact found on Account: ' + jobApp.Account__c);
+                }
+            } else {
+                // The Job Application does not have a related Account
+                System.debug('Job Application has no related Account.');
+            }
+        }
+        /*Task Creation Section */
         List<Task> tasksToInsert = new List<Task>();
 
         // Task 1: Check if the job description aligns with your interests and values
@@ -110,7 +141,9 @@ public class JobApplicationTriggerHandler {
 
         if (!tasksToInsert.isEmpty()) {
             insert tasksToInsert;
-        }    }
+        }    
+
+    }
 
     // Specific handler for 'Applying' Status
     private static void handleApplying(Job_Application__c jobApp) {
