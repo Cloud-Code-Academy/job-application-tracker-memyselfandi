@@ -185,13 +185,65 @@ public class JobApplicationTriggerHandler {
     // Specific handler for 'Applied' Status
     private static void handleApplied(Job_Application__c jobApp) {
         System.debug('Handling Applied status for Job Application: ' + jobApp.Id);
-        // Add specific logic for Applied status
+        List<Task> tasksToInsert = new List<Task>();
+
+        // Task 1: Reach out to the hiring manager or recruiter
+        Task task1 = new Task(
+            WhatId = jobApp.Id,
+            OwnerId = jobApp.OwnerId,
+            Subject = 'Reach Out to Hiring Manager or Recruiter',
+            Description = 'Reach out to the hiring manager or recruiter regarding your application.',
+            Status = 'Not Started',
+            Priority = 'Normal',
+            ActivityDate = Date.today().addDays(2) // Due date = today + 2 days
+        );
+        tasksToInsert.add(task1);
+
+        // Task 2: Follow up on your application via email weekly
+        Task task2 = new Task(
+            WhatId = jobApp.Id,
+            OwnerId = jobApp.OwnerId,
+            Subject = 'Weekly Follow-Up on Application',
+            Description = 'Send a follow-up email weekly regarding the status of your application.',
+            Status = 'Not Started',
+            Priority = 'Normal',
+            ActivityDate = Date.today().addDays(2) // Due date = today + 2 days
+        );
+        tasksToInsert.add(task2);
+
+        // Task 3: Continue identifying and saving similar job opportunities
+        Task task3 = new Task(
+            WhatId = jobApp.Id,
+            OwnerId = jobApp.OwnerId,
+            Subject = 'Identify Similar Job Opportunities',
+            Description = 'Continue identifying and saving similar job opportunities.',
+            Status = 'Not Started',
+            Priority = 'Normal',
+            ActivityDate = Date.today().addDays(2) // Due date = today + 2 days
+        );
+        tasksToInsert.add(task3);
+
+        // Task 4: Set up weekly networking calls to explore similar companies/roles
+        Task task4 = new Task(
+            WhatId = jobApp.Id,
+            OwnerId = jobApp.OwnerId,
+            Subject = 'Set Up Weekly Networking Calls',
+            Description = 'Set up weekly networking calls to explore similar companies and roles.',
+            Status = 'Not Started',
+            Priority = 'Normal',
+            ActivityDate = Date.today().addDays(2) // Due date = today + 2 days
+        );
+        tasksToInsert.add(task4);
+
+        if (!tasksToInsert.isEmpty()) {
+            insert tasksToInsert;
+        }
     }
 
     // Specific handler for 'Interviewing' Status
     private static void handleInterviewing(Job_Application__c jobApp) {
         System.debug('Handling Interviewing status for Job Application: ' + jobApp.Id);
-        // Add specific logic for Interviewing status
+        
     }
 
     // Specific handler for 'Negotiating' Status
