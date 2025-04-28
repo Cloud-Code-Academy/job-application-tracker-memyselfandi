@@ -92,14 +92,33 @@ public class JobApplicationTriggerHandler {
                     jobApp.Primary_Contact__c = contacts[0].Id;
                     System.debug('Auto-assigned Primary Contact: ' + contacts[0].Id);
                 } else {
-                    // No matching Primary Contact found on the Account
-                    System.debug('No Primary Contact found on Account: ' + jobApp.Company_Name__c);
+                    System.debug('No Primary Contact found. Looking for any Contact on the Company (Account)...');
+    
+                    // No Primary Contact found, now fetch the newest Contact without Contact_Type__c condition
+                    List<Contact> anyContacts = [
+                        SELECT Id, Name
+                        FROM Contact
+                        WHERE AccountId = :jobApp.Company_Name__c
+                        ORDER BY CreatedDate DESC
+                        LIMIT 1
+                    ];
+    
+                    if (!anyContacts.isEmpty()) {
+                        // Found a general Contact, assign it
+                        jobApp.Primary_Contact__c = anyContacts[0].Id;
+                        System.debug('Auto-assigned Primary Contact (any Contact): ' + anyContacts[0].Id);
+                    } else {
+                        // No Contacts at all found on the Company (Account)
+                        System.debug('No Contacts found on Company (Account): ' + jobApp.Company_Name__c);
+                    }
                 }
             } else {
                 // The Job Application does not have a related Account
                 System.debug('Job Application has no related Account.');
             }
         }
+
+        
         /*Task Creation Section */
         List<Task> tasksToInsert = new List<Task>();
 
