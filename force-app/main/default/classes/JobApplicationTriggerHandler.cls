@@ -243,6 +243,72 @@ public class JobApplicationTriggerHandler {
     // Specific handler for 'Interviewing' Status
     private static void handleInterviewing(Job_Application__c jobApp) {
         System.debug('Handling Interviewing status for Job Application: ' + jobApp.Id);
+
+        List<Task> tasksToInsert = new List<Task>();
+
+        // Task 1: Prepare your blurb or “tell me about yourself” response
+        Task task1 = new Task(
+            WhatId = jobApp.Id,
+            OwnerId = jobApp.OwnerId,
+            Subject = 'Prepare Blurb - Tell Me About Yourself',
+            Description = 'Prepare your blurb or “tell me about yourself” response',
+            Status = 'Not Started',
+            Priority = 'High',
+            ActivityDate = Date.today().addDays(3) // Set Due Date to 3 days from today
+        );
+        tasksToInsert.add(task1);
+
+        // Task 2: Practice answering behavioral interview questions
+        Task task2 = new Task(
+            WhatId = jobApp.Id,
+            OwnerId = jobApp.OwnerId,
+            Subject = 'Practice Behavioral Interview Questions',
+            Description = 'Practice answering behavioral interview questions',
+            Status = 'Not Started',
+            Priority = 'High',
+            ActivityDate = Date.today().addDays(3) // Set Due Date to 3 days from today
+        );
+        tasksToInsert.add(task2);
+
+        // Task 3: Research the company and your interviewers
+        Task task3 = new Task(
+            WhatId = jobApp.Id,
+            OwnerId = jobApp.OwnerId,
+            Subject = 'Research Company and Interviewers',
+            Description = 'Research the company and your interviewers',
+            Status = 'Not Started',
+            Priority = 'Normal',
+            ActivityDate = Date.today().addDays(3) // Set Due Date to 3 days from today
+        );
+        tasksToInsert.add(task3);
+
+        // Task 4: Set up your virtual interview space and test your tech
+        Task task4 = new Task(
+            WhatId = jobApp.Id,
+            OwnerId = jobApp.OwnerId,
+            Subject = 'Setup Virtual Interview Space',
+            Description = 'Set up your virtual interview space and test your tech',
+            Status = 'Not Started',
+            Priority = 'Normal',
+            ActivityDate = Date.today().addDays(3) // Set Due Date to 3 days from today
+        );
+        tasksToInsert.add(task4);
+
+        // Task 5: Send thank you emails within 24 hours
+        Task task5 = new Task(
+            WhatId = jobApp.Id,
+            OwnerId = jobApp.OwnerId,
+            Subject = 'Send Thank You Emails',
+            Description = 'Send thank you emails within 24 hours after your interview',
+            Status = 'Not Started',
+            Priority = 'High',
+            ActivityDate = Date.today().addDays(3) // Set Due Date to 3 days from today
+        );
+        tasksToInsert.add(task5);
+
+        if (!tasksToInsert.isEmpty()) {
+            insert tasksToInsert;
+        }
         
     }
 
