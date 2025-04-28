@@ -361,7 +361,48 @@ public class JobApplicationTriggerHandler {
     // Specific handler for 'Accepted' Status
     private static void handleAccepted(Job_Application__c jobApp) {
         System.debug('Handling Accepted status for Job Application: ' + jobApp.Id);
-        // Add specific logic for Accepted status
+        
+        List<Task> tasksToInsert = new List<Task>();
+
+        // Task 1: Plan your resignation if applicable
+        Task task1 = new Task(
+            WhatId = jobApp.Id,
+            OwnerId = jobApp.OwnerId,
+            Subject = 'Plan Resignation',
+            Description = 'Plan your resignation if applicable',
+            Status = 'Not Started',
+            Priority = 'Normal',
+            ActivityDate = Date.today().addDays(5) // Set Due Date to 5 days later
+        );
+        tasksToInsert.add(task1);
+
+        // Task 2: Take some time to relax and recharge
+        Task task2 = new Task(
+            WhatId = jobApp.Id,
+            OwnerId = jobApp.OwnerId,
+            Subject = 'Relax and Recharge',
+            Description = 'Take some time to relax and recharge',
+            Status = 'Not Started',
+            Priority = 'Normal',
+            ActivityDate = Date.today().addDays(5) // Set Due Date to 5 days later
+        );
+        tasksToInsert.add(task2);
+
+        // Task 3: Prepare for your first day of onboarding
+        Task task3 = new Task(
+            WhatId = jobApp.Id,
+            OwnerId = jobApp.OwnerId,
+            Subject = 'Prepare for Onboarding',
+            Description = 'Prepare for your first day of onboarding',
+            Status = 'Not Started',
+            Priority = 'Normal',
+            ActivityDate = Date.today().addDays(5) // Set Due Date to 5 days later
+        );
+        tasksToInsert.add(task3);
+
+        if (!tasksToInsert.isEmpty()) {
+            insert tasksToInsert;
+        }
     }
 
     // Specific handler for 'Closed' Status
