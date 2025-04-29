@@ -21,13 +21,13 @@
             <!-- Section to display calculated results -->
             <template if:true={calculated}>
                 <div class="slds-m-top_medium">
-                    <p><strong>Federal Tax:</strong> ${federalTax}</p>
-                    <p><strong>Medicare:</strong> ${medicare}</p>
-                    <p><strong>Social Security:</strong> ${socialSecurity}</p>
-                    <p><strong>Net Take Home (Yearly):</strong> ${netPayYearly}</p>
-                    <p><strong>Net Take Home (6 Months):</strong> ${netPaySixMonths}</p>
-                    <p><strong>Net Take Home (Monthly):</strong> ${netPayMonthly}</p>
-                    <p><strong>Net Take Home (Bi-Weekly):</strong> ${netPayBiWeekly}</p>
+                    <p><strong>Federal Tax:</strong> ${formattedFederalTax}</p>
+                    <p><strong>Medicare:</strong> ${formattedMedicare}</p>
+                    <p><strong>Social Security:</strong> ${formattedSocialSecurity}</p>
+                    <p><strong>Net Take Home (Yearly):</strong> ${formattedNetPayYearly}</p>
+                    <p><strong>Net Take Home (6 Months):</strong> ${formattedNetPaySixMonths}</p>
+                    <p><strong>Net Take Home (Monthly):</strong> ${formattedNetPayMonthly}</p>
+                    <p><strong>Net Take Home (Bi-Weekly):</strong> ${formattedNetPayBiWeekly}</p>
                 </div>
             </template>
 
