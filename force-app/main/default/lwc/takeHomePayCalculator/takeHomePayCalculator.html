@@ -11,12 +11,14 @@
                 type="number">
             </lightning-input>
 
-            <!-- Button to trigger take-home pay calculation -->
-            <lightning-button 
-                label="Calculate Take Home Pay" 
-                onclick={calculateTakeHomePay} 
-                class="calculate-button">
-            </lightning-button>
+            <!-- Centered Calculate button using SLDS utility classes -->
+            <div class="slds-grid slds-grid_align-center slds-m-top_medium">
+                <lightning-button 
+                    label="Calculate Take Home Pay" 
+                    onclick={calculateTakeHomePay} 
+                    class="calculate-button">
+                </lightning-button>
+            </div>
 
             <!-- Results section: displays only after calculations are done -->
             <template if:true={calculated}>
