@@ -24,35 +24,45 @@
             <template if:true={calculated}>
                 <div class="result-container">
 
-                    <!-- Display Federal Tax -->
+                    <!-- Display Federal Tax (in red with a minus sign) -->
                     <div class="result-row">
                         <span class="result-label">Federal Tax:</span>
+                        
+                        <!-- Format as currency, apply red color using CSS class, show negative value -->
                         <lightning-formatted-number 
-                            value={federalTax} 
+                            value={-federalTax} 
                             format-style="currency" 
-                            currency-code="USD">
+                            currency-code="USD"
+                            class="negative-value">
                         </lightning-formatted-number>
                     </div>
 
-                    <!-- Display Medicare deduction -->
+                    <!-- Display Medicare (in red with a minus sign) -->
                     <div class="result-row">
                         <span class="result-label">Medicare:</span>
+
+                        <!-- Format as currency, apply red color using CSS class, show negative value -->
                         <lightning-formatted-number 
-                            value={medicare} 
+                            value={-medicare} 
                             format-style="currency" 
-                            currency-code="USD">
+                            currency-code="USD"
+                            class="negative-value">
                         </lightning-formatted-number>
                     </div>
 
-                    <!-- Display Social Security deduction -->
+                    <!-- Display Social Security (in red with a minus sign) -->
                     <div class="result-row">
                         <span class="result-label">Social Security:</span>
+
+                        <!-- Format as currency, apply red color using CSS class, show negative value -->
                         <lightning-formatted-number 
-                            value={socialSecurity} 
+                            value={-socialSecurity} 
                             format-style="currency" 
-                            currency-code="USD">
+                            currency-code="USD"
+                            class="negative-value">
                         </lightning-formatted-number>
                     </div>
+
 
                     <!-- Display yearly net take-home pay -->
                     <div class="result-row">
