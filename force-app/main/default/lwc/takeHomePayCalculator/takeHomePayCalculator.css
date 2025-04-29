@@ -1,0 +1,35 @@
+/* Add padding around the whole component */
+:host {
+    display: block;
+    padding: 1rem; /* Same as slds-p-around_medium */
+}
+
+/* Style the calculation results section */
+.result-container {
+    margin-top: 1rem; /* slds-m-top_medium */
+    background-color: #f3f6f9; /* Light SLDS background */
+    padding: 1rem;
+    border-radius: 0.25rem; /* Rounded corners */
+}
+
+/* Style individual result rows */
+.result-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem; /* slds-m-bottom_small */
+}
+
+/* Label text styling */
+.result-label {
+    font-weight: bold;
+}
+
+/* Value text styling */
+.result-value {
+    font-weight: normal;
+}
+
+/* Button top spacing */
+.calculate-button {
+    margin-top: 1rem; /* slds-m-top_medium */
+}
