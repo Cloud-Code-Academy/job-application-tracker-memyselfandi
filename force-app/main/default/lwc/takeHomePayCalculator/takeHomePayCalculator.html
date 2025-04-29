@@ -1,9 +1,9 @@
 <template>
-    <!-- Main card container -->
+    <!-- Lightning card to wrap the calculator UI -->
     <lightning-card title="Take Home Pay Calculator">
         <div class="slds-p-around_medium">
 
-            <!-- Input field to enter or edit Salary -->
+            <!-- Input field for user to enter/edit the base salary -->
             <lightning-input 
                 label="Base Salary (Yearly)" 
                 value={salary} 
@@ -11,23 +11,87 @@
                 type="number">
             </lightning-input>
 
-            <!-- Button to trigger calculation -->
+            <!-- Button to trigger take-home pay calculation -->
             <lightning-button 
                 label="Calculate Take Home Pay" 
                 onclick={calculateTakeHomePay} 
-                class="slds-m-top_medium">
+                class="calculate-button">
             </lightning-button>
 
-            <!-- Section to display calculated results -->
+            <!-- Results section: displays only after calculations are done -->
             <template if:true={calculated}>
-                <div class="slds-m-top_medium">
-                    <p><strong>Federal Tax:</strong> ${formattedFederalTax}</p>
-                    <p><strong>Medicare:</strong> ${formattedMedicare}</p>
-                    <p><strong>Social Security:</strong> ${formattedSocialSecurity}</p>
-                    <p><strong>Net Take Home (Yearly):</strong> ${formattedNetPayYearly}</p>
-                    <p><strong>Net Take Home (6 Months):</strong> ${formattedNetPaySixMonths}</p>
-                    <p><strong>Net Take Home (Monthly):</strong> ${formattedNetPayMonthly}</p>
-                    <p><strong>Net Take Home (Bi-Weekly):</strong> ${formattedNetPayBiWeekly}</p>
+                <div class="result-container">
+
+                    <!-- Display Federal Tax -->
+                    <div class="result-row">
+                        <span class="result-label">Federal Tax:</span>
+                        <lightning-formatted-number 
+                            value={federalTax} 
+                            format-style="currency" 
+                            currency-code="USD">
+                        </lightning-formatted-number>
+                    </div>
+
+                    <!-- Display Medicare deduction -->
+                    <div class="result-row">
+                        <span class="result-label">Medicare:</span>
+                        <lightning-formatted-number 
+                            value={medicare} 
+                            format-style="currency" 
+                            currency-code="USD">
+                        </lightning-formatted-number>
+                    </div>
+
+                    <!-- Display Social Security deduction -->
+                    <div class="result-row">
+                        <span class="result-label">Social Security:</span>
+                        <lightning-formatted-number 
+                            value={socialSecurity} 
+                            format-style="currency" 
+                            currency-code="USD">
+                        </lightning-formatted-number>
+                    </div>
+
+                    <!-- Display yearly net take-home pay -->
+                    <div class="result-row">
+                        <span class="result-label">Net Take Home (Yearly):</span>
+                        <lightning-formatted-number 
+                            value={netPayYearly} 
+                            format-style="currency" 
+                            currency-code="USD">
+                        </lightning-formatted-number>
+                    </div>
+
+                    <!-- Display six-month net take-home pay -->
+                    <div class="result-row">
+                        <span class="result-label">Net Take Home (6 Months):</span>
+                        <lightning-formatted-number 
+                            value={netPaySixMonths} 
+                            format-style="currency" 
+                            currency-code="USD">
+                        </lightning-formatted-number>
+                    </div>
+
+                    <!-- Display monthly net take-home pay -->
+                    <div class="result-row">
+                        <span class="result-label">Net Take Home (Monthly):</span>
+                        <lightning-formatted-number 
+                            value={netPayMonthly} 
+                            format-style="currency" 
+                            currency-code="USD">
+                        </lightning-formatted-number>
+                    </div>
+
+                    <!-- Display bi-weekly net take-home pay -->
+                    <div class="result-row">
+                        <span class="result-label">Net Take Home (Bi-Weekly):</span>
+                        <lightning-formatted-number 
+                            value={netPayBiWeekly} 
+                            format-style="currency" 
+                            currency-code="USD">
+                        </lightning-formatted-number>
+                    </div>
+
                 </div>
             </template>
 
