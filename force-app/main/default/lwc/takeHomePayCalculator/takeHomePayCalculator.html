@@ -1,0 +1,36 @@
+<template>
+    <!-- Main card container -->
+    <lightning-card title="Take Home Pay Calculator">
+        <div class="slds-p-around_medium">
+
+            <!-- Input field to enter or edit Salary -->
+            <lightning-input 
+                label="Base Salary (Yearly)" 
+                value={salary} 
+                onchange={handleSalaryChange} 
+                type="number">
+            </lightning-input>
+
+            <!-- Button to trigger calculation -->
+            <lightning-button 
+                label="Calculate Take Home Pay" 
+                onclick={calculateTakeHomePay} 
+                class="slds-m-top_medium">
+            </lightning-button>
+
+            <!-- Section to display calculated results -->
+            <template if:true={calculated}>
+                <div class="slds-m-top_medium">
+                    <p><strong>Federal Tax:</strong> ${federalTax}</p>
+                    <p><strong>Medicare:</strong> ${medicare}</p>
+                    <p><strong>Social Security:</strong> ${socialSecurity}</p>
+                    <p><strong>Net Take Home (Yearly):</strong> ${netPayYearly}</p>
+                    <p><strong>Net Take Home (6 Months):</strong> ${netPaySixMonths}</p>
+                    <p><strong>Net Take Home (Monthly):</strong> ${netPayMonthly}</p>
+                    <p><strong>Net Take Home (Bi-Weekly):</strong> ${netPayBiWeekly}</p>
+                </div>
+            </template>
+
+        </div>
+    </lightning-card>
+</template>
