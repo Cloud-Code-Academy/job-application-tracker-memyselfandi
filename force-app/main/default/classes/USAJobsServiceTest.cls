@@ -1,20 +1,28 @@
 @isTest
-public class USAJobsServiceTest {
+private class USAJobsServiceTest {
     @isTest
-    static void testGetJobs_Success_WithInterfaceMock() {
-        // 1. Set up the mock callout response using the new mock class
-        Test.setMock(HttpCalloutMock.class, new MockUSAJobsServiceWithInterface());
+    static void testGetJobs() {
+        // Set the mock callout
+        Test.setMock(HttpCalloutMock.class, new USAJobsMock());
 
-        // 2. Call the method that makes the callout
+        // Call the method inside a test context
         Test.startTest();
-        USAJobsService service = new USAJobsService(); // Instantiate the service class
-        service.getJobs(); // Call the getJobs method
+        USAJobsService.getJobs();
         Test.stopTest();
 
-        // 3. Assertions to verify the behavior based on the mock response
-        // (Same as before - check debug logs or a testable variable)
-        System.debug('Test with interface mock completed. Check debug logs.');
-    }
+        // Assert we parsed two jobs
+        System.assertEquals(2, USAJobsService.parsedJobs.size(), 'Should parse 2 jobs');
 
-    // You can keep or modify your other test methods as needed.
+        // Assert first job details
+        Map<String, String> job1 = USAJobsService.parsedJobs[0];
+        System.assertEquals('Salesforce Developer', job1.get('JobTitle'), 'Job title mismatch');
+        System.assertEquals('Department of Tech', job1.get('OrganizationName'), 'Org name mismatch');
+        System.assertEquals('Washington, DC', job1.get('LocationName'), 'Location mismatch');
+
+        // Assert second job details
+        Map<String, String> job2 = USAJobsService.parsedJobs[1];
+        System.assertEquals('Apex Engineer', job2.get('JobTitle'), 'Job title mismatch');
+        System.assertEquals('Federal IT', job2.get('OrganizationName'), 'Org name mismatch');
+        System.assertEquals('Washington, DC', job2.get('LocationName'), 'Location mismatch');
+    }
 }
