@@ -30,44 +30,94 @@ public class USAJobsService {
 
     // Helper method to parse the JSON response into a list of job records
     public static void parseJobData(String responseBody) {
-        parsedJobs.clear();  // Clear any existing job data
-
-        // Deserialize the JSON string into a generic map
+        parsedJobs.clear();  // Clear any previous results
         Map<String, Object> jsonResponse = (Map<String, Object>) JSON.deserializeUntyped(responseBody);
-
-        // The actual jobs list is nested under "SearchResult" > "SearchResultItems"
+        
+        // Ensure SearchResult exists
         if (jsonResponse.containsKey('SearchResult')) {
             Map<String, Object> searchResult = (Map<String, Object>) jsonResponse.get('SearchResult');
-
-            if (searchResult.containsKey('SearchResultItems')) {
-                List<Object> jobs = (List<Object>) searchResult.get('SearchResultItems');
-
-                // Loop through each job item and extract fields into a map
-                for (Object obj : jobs) {
-                    Map<String, Object> job = (Map<String, Object>) obj;
-
-                    Map<String, String> jobInfo = new Map<String, String>{
-                        'JobTitle' => String.valueOf(job.get('JobTitle')),
-                        'OrganizationName' => String.valueOf(job.get('OrganizationName')),
-                        'LocationName' => String.valueOf(job.get('LocationName')),
-                        'WhoMayApply' => String.valueOf(job.get('WhoMayApply')),
-                        'HiringPath' => String.valueOf(job.get('HiringPath')),
-                        'MajorDuties' => String.valueOf(job.get('MajorDuties')),
-                        'MatchedObjectId' => String.valueOf(job.get('MatchedObjectId')),
-                        'PositionURI' => String.valueOf(job.get('PositionURI')),
-                        'MinimumRange' => String.valueOf(job.get('Remuneration') != null ?
-                            ((Map<String, Object>) job.get('Remuneration')).get('MinimumRange') : '')
-                    };
-
-                    parsedJobs.add(jobInfo);  // Add each job map to the parsedJobs list
+            
+            // Get list of job items
+            List<Object> jobItems = (List<Object>) searchResult.get('SearchResultItems');
+            
+            for (Object item : jobItems) {
+                Map<String, Object> jobWrapper = (Map<String, Object>) item;
+                
+                // Get MatchedObjectId and MatchedObjectDescriptor
+                String matchedObjectId = (String) jobWrapper.get('MatchedObjectId');
+                Map<String, Object> descriptor = (Map<String, Object>) jobWrapper.get('MatchedObjectDescriptor');
+                
+                // Get Position Title and other fields
+                String positionTitle = (String) descriptor.get('PositionTitle');
+                String positionURI = (String) descriptor.get('PositionURI');
+                String organizationName = (String) descriptor.get('OrganizationName');
+                
+                // Get salary (handle if missing or null)
+                Decimal minSalary = 0;
+                if (descriptor.containsKey('PositionRemuneration')) {
+                    List<Object> remunerationList = (List<Object>) descriptor.get('PositionRemuneration');
+                    if (!remunerationList.isEmpty()) {
+                        Map<String, Object> remuneration = (Map<String, Object>) remunerationList.get(0);
+                        String minSalaryStr = (String) remuneration.get('MinimumRange');
+                        minSalary = Decimal.valueOf(minSalaryStr);
+                    }
                 }
-            } else {
-                System.debug('No SearchResultItems key found in SearchResult.');
+                
+                // Get Location (assume first location in PositionLocation array for simplicity)
+                String location = "";
+                if (descriptor.containsKey('PositionLocation')) {
+                    List<Object> locations = (List<Object>) descriptor.get('PositionLocation');
+                    if (!locations.isEmpty()) {
+                        Map<String, Object> firstLocation = (Map<String, Object>) locations.get(0);
+                        location = (String) firstLocation.get('LocationName');
+                    }
+                }
+    
+                // Create jobInfo map
+                Map<String, String> jobInfo = new Map<String, String>{
+                    'MatchedObjectId' => matchedObjectId,
+                    'JobTitle' => positionTitle,
+                    'PositionURI' => positionURI,
+                    'OrganizationName' => organizationName,
+                    'Location' => location,
+                    'Salary' => String.valueOf(minSalary)  // Convert salary to string if needed
+                };
+    
+                parsedJobs.add(jobInfo);
             }
         } else {
             System.debug('No SearchResult key found in response.');
         }
     }
+    
+    public static void printRawResponse(String responseBody) {
+        System.debug('--- Raw API Response ---');
+        System.debug(responseBody);
+    }
+    
+
+    public static void printJobInfo() {
+        // Check if the parsedJobs list is empty
+        if (parsedJobs.isEmpty()) {
+            System.debug('No jobs to display.'); // Log message if no jobs found
+            return; // Exit the method early
+        }
+    
+        Integer index = 1; // Initialize a counter to track job number
+    
+        // Loop through each job map in the parsedJobs list
+        for (Map<String, String> job : parsedJobs) {
+            System.debug('--- Job ' + index + ' ---'); // Print a header for each job
+    
+            // Loop through each key in the job map
+            for (String key : job.keySet()) {
+                System.debug(key + ': ' + job.get(key)); // Print each key-value pair
+            }
+    
+            index++; // Increment the job counter
+        }
+    }
+    
 
     // Method to create or update Job Application records in Salesforce from parsed jobs
     public static void saveJobsToSalesforce() {
@@ -83,7 +133,7 @@ public class USAJobsService {
                 Hiring_Path__c = job.get('HiringPath'),
                 Description__c = job.get('MajorDuties'),
                 Matched_Object_Id__c = job.get('MatchedObjectId'),
-                Salary__c = job.get('MinimumRange')
+                Salary__c = String.isNotBlank(job.get('MinimumRange')) ? Decimal.valueOf(job.get('MinimumRange')) : null
             ));
         }
 
