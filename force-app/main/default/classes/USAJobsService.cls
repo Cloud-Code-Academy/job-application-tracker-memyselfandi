@@ -64,7 +64,7 @@ public class USAJobsService {
                 }
                 
                 // Get Location (assume first location in PositionLocation array for simplicity)
-                String location = "";
+                String location = '';
                 if (descriptor.containsKey('PositionLocation')) {
                     List<Object> locations = (List<Object>) descriptor.get('PositionLocation');
                     if (!locations.isEmpty()) {
