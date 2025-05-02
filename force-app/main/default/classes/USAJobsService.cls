@@ -19,6 +19,8 @@ public class USAJobsService {
             // Check if the response status is OK (200)
             if (res.getStatusCode() == 200) {
                 parseJobData(res.getBody());     // Parse the JSON response
+                List<Map<String, Object>> jobList = convertParsedJobsToObject(parsedJobs);
+                saveJobsToSalesforce(jobList);    // Save jobs to Salesforce
             } else {
                 System.debug('Callout failed. Status code: ' + res.getStatusCode());
                 System.debug('Response: ' + res.getBody());
@@ -89,55 +91,94 @@ public class USAJobsService {
             System.debug('No SearchResult key found in response.');
         }
     }
-    
-    public static void printRawResponse(String responseBody) {
-        System.debug('--- Raw API Response ---');
-        System.debug(responseBody);
-    }
-    
 
-    public static void printJobInfo() {
-        // Check if the parsedJobs list is empty
-        if (parsedJobs.isEmpty()) {
-            System.debug('No jobs to display.'); // Log message if no jobs found
-            return; // Exit the method early
+    // Convert parsed jobs to the format expected by saveJobsToSalesforce (List<Map<String, Object>>)
+    public static List<Map<String, Object>> convertParsedJobsToObject(List<Map<String, String>> parsedJobs) {
+        List<Map<String, Object>> jobList = new List<Map<String, Object>>();
+
+        for (Map<String, String> job : parsedJobs) {
+            Map<String, Object> jobMap = new Map<String, Object>();
+
+            jobMap.put('MatchedObjectId', job.get('MatchedObjectId'));
+            jobMap.put('MatchedObjectDescriptor', new Map<String, Object>{
+                'PositionTitle' => job.get('JobTitle'),
+                'PositionURI' => job.get('PositionURI'),
+                'OrganizationName' => job.get('OrganizationName'),
+                'PositionLocation' => new List<Object>{
+                    new Map<String, Object>{'LocationName' => job.get('Location')}
+                },
+                'PositionRemuneration' => new List<Object>{
+                    new Map<String, Object>{'MinimumRange' => job.get('Salary')}
+                }
+            });
+
+            jobList.add(jobMap);
+        }
+
+        return jobList;
+    }
+
+    // Method to save jobs to Salesforce
+    public static void saveJobsToSalesforce(List<Map<String, Object>> jobList) {
+        // List to collect new job application records
+        List<Job_Application__c> jobsToInsert = new List<Job_Application__c>();
+    
+        // Set to collect unique organization names from the job list
+        Set<String> organizationNames = new Set<String>();
+    
+        // Collect all organization names from the job list
+        for (Map<String, Object> job : jobList) {
+            Map<String, Object> descriptor = (Map<String, Object>) job.get('MatchedObjectDescriptor');
+            String orgName = (String) descriptor.get('OrganizationName');
+            if (orgName != null) {
+                organizationNames.add(orgName);
+            }
         }
     
-        Integer index = 1; // Initialize a counter to track job number
+        // Query Accounts based on the organization names
+        Map<String, Id> accountMap = new Map<String, Id>();
+        for (Account acc : [SELECT Id, Name FROM Account WHERE Name IN :organizationNames]) {
+            accountMap.put(acc.Name, acc.Id);
+        }
     
-        // Loop through each job map in the parsedJobs list
-        for (Map<String, String> job : parsedJobs) {
-            System.debug('--- Job ' + index + ' ---'); // Print a header for each job
+        // Iterate through the job list and create Job_Application__c records
+        for (Map<String, Object> job : jobList) {
+            Map<String, Object> descriptor = (Map<String, Object>) job.get('MatchedObjectDescriptor');
+            List<Object> positionRemunerationList = (List<Object>) descriptor.get('PositionRemuneration');
+            Map<String, Object> salaryInfo = (positionRemunerationList != null && !positionRemunerationList.isEmpty())
+                ? (Map<String, Object>) positionRemunerationList[0]
+                : null;
     
-            // Loop through each key in the job map
-            for (String key : job.keySet()) {
-                System.debug(key + ': ' + job.get(key)); // Print each key-value pair
+            String orgName = (String) descriptor.get('OrganizationName');
+    
+            // Retrieve the Account Id for the organization, or skip if not found
+            Id accountId = accountMap.get(orgName);
+            if (accountId == null) {
+                continue;  // Skip this job if the organization does not have an associated Account
             }
     
-            index++; // Increment the job counter
-        }
-    }
+            // Create a new Job_Application__c record
+            Job_Application__c jobRecord = new Job_Application__c(
+                Matched_Object_Id__c = (String) job.get('MatchedObjectId'),
+                Position_Title__c = (String) descriptor.get('PositionTitle'),
+                Job_URL__c = (String) descriptor.get('PositionURI'),
+                Company_Name__c = accountId, // This is the lookup to Account
+                Salary__c = salaryInfo != null && salaryInfo.get('MinimumRange') != null 
+                    ? Decimal.valueOf((String) salaryInfo.get('MinimumRange')) 
+                    : null
+            );
     
-
-    // Method to create or update Job Application records in Salesforce from parsed jobs
-    public static void saveJobsToSalesforce() {
-        List<Job_Application__c> jobRecords = new List<Job_Application__c>();
-
-        // Loop through the parsed job maps and build Salesforce records
-        for (Map<String, String> job : parsedJobs) {
-            jobRecords.add(new Job_Application__c(
-                Position_Title__c = job.get('JobTitle'),
-                Company_Name__c = job.get('OrganizationName'),
-                Location__c = job.get('LocationName'),
-                Job_URL__c = job.get('PositionURI'),
-                Hiring_Path__c = job.get('HiringPath'),
-                Description__c = job.get('MajorDuties'),
-                Matched_Object_Id__c = job.get('MatchedObjectId'),
-                Salary__c = String.isNotBlank(job.get('MinimumRange')) ? Decimal.valueOf(job.get('MinimumRange')) : null
-            ));
+            // Add the job record to the insert list
+            jobsToInsert.add(jobRecord);
         }
-
-        // Upsert records using the MatchedObjectId as an external ID to avoid duplicates
-        upsert jobRecords Job_Application__c.Matched_Object_Id__c;
+    
+        // Insert the job records if there are any
+        if (!jobsToInsert.isEmpty()) {
+            try {
+                insert jobsToInsert;  // Insert the new Job_Application__c records into Salesforce
+            } catch (DmlException e) {
+                System.debug('Error inserting records: ' + e.getMessage());
+            }
+        }
     }
 }
