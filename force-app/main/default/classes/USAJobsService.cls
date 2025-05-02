@@ -6,7 +6,7 @@ public class USAJobsService {
         HttpRequest req = new HttpRequest();
         Http http = new Http();
 
-        String endpoint = 'callout:USAJOBS_API/api/search?Keyword=developer&LocationName=Washington%2C%20DC';
+        String endpoint = 'callout:USAJOBS_API/api/search?Keyword=developer&LocationName=Washington%2C%20DC&DatePosted=30&RemunerationMinimumAmount=80000&WhoMayApply=public&HiringPath=public&ResultsPerPage=5';
         req.setEndpoint(endpoint);
         req.setMethod('GET');
         req.setHeader('Accept', 'application/json');
@@ -37,7 +37,9 @@ public class USAJobsService {
                     'OrganizationName' => String.valueOf(job.get('OrganizationName')),
                     'LocationName' => String.valueOf(job.get('LocationName')),
                     'WhoMayApply' => String.valueOf(job.get('WhoMayApply')),
-                    'HiringPath' => String.valueOf(job.get('HiringPath'))
+                    'HiringPath' => String.valueOf(job.get('HiringPath')),
+                    'MajorDuties' => String.valueOf(job.get('MajorDuties')),
+                    'MatchedObjectId' => String.valueOf(job.get('MatchedObjectId'))
                 };
                 parsedJobs.add(jobInfo);
             }
@@ -45,4 +47,28 @@ public class USAJobsService {
             System.debug('No SearchResult key found in response.');
         }
     }
+
+    public static void saveJobsToSalesforce() {
+        // Create a list to hold new or updated Job Application records
+        List<Job_Application__c> jobRecords = new List<Job_Application__c>();
+        
+        // Loop through each parsed job from the API response
+        for (Map<String, String> job : parsedJobs) {
+            // Create a new Job_Application__c record and set its field values
+            jobRecords.add(new Job_Application__c(
+                Job_Title__c = job.get('JobTitle'),                  // Set Job Title
+                Organization_Name__c = job.get('OrganizationName'),  // Set Organization Name
+                Location_Name__c = job.get('LocationName'),          // Set Location Name
+                Who_May_Apply__c = job.get('WhoMayApply'),           // Set Who May Apply
+                Hiring_Path__c = job.get('HiringPath'),              // Set Hiring Path
+                Major_Duties__c = job.get('MajorDuties'),            // Set Major Duties
+                Matched_Object_Id__c = job.get('MatchedObjectId')    // Set Matched Object ID (used as external ID)
+            ));
+        }
+    
+        // Upsert records: insert new ones or update existing based on external ID
+        upsert jobRecords Job_Application__c.Matched_Object_Id__c;
+    }
+    
+
 }
