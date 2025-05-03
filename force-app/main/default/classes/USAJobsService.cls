@@ -20,6 +20,7 @@ public class USAJobsService {
             if (res.getStatusCode() == 200) {
                 parseJobData(res.getBody());     // Parse the JSON response
                 List<Map<String, Object>> jobList = convertParsedJobsToObject(parsedJobs);
+                System.debug('Passing Job List to saveJobsToSalesforce(jobList)');
                 saveJobsToSalesforce(jobList);    // Save jobs to Salesforce
             } else {
                 System.debug('Callout failed. Status code: ' + res.getStatusCode());
@@ -120,13 +121,12 @@ public class USAJobsService {
 
     // Method to save jobs to Salesforce
     public static void saveJobsToSalesforce(List<Map<String, Object>> jobList) {
-        // List to collect new job application records
         List<Job_Application__c> jobsToInsert = new List<Job_Application__c>();
+        List<Account> accountsToInsert = new List<Account>();
+        Map<String, Id> accountMap = new Map<String, Id>();
     
-        // Set to collect unique organization names from the job list
+        // Step 1: Gather organization names from job list
         Set<String> organizationNames = new Set<String>();
-    
-        // Collect all organization names from the job list
         for (Map<String, Object> job : jobList) {
             Map<String, Object> descriptor = (Map<String, Object>) job.get('MatchedObjectDescriptor');
             String orgName = (String) descriptor.get('OrganizationName');
@@ -135,13 +135,28 @@ public class USAJobsService {
             }
         }
     
-        // Query Accounts based on the organization names
-        Map<String, Id> accountMap = new Map<String, Id>();
+        // Step 2: Query existing Accounts
         for (Account acc : [SELECT Id, Name FROM Account WHERE Name IN :organizationNames]) {
             accountMap.put(acc.Name, acc.Id);
         }
     
-        // Iterate through the job list and create Job_Application__c records
+        // Step 3: Create missing Accounts
+        for (String orgName : organizationNames) {
+            if (!accountMap.containsKey(orgName)) {
+                Account newAcc = new Account(Name = orgName);
+                accountsToInsert.add(newAcc);
+            }
+        }
+    
+        // Step 4: Insert new Accounts and update accountMap
+        if (!accountsToInsert.isEmpty()) {
+            insert accountsToInsert;
+            for (Account acc : accountsToInsert) {
+                accountMap.put(acc.Name, acc.Id);
+            }
+        }
+    
+        // Step 5: Create Job_Application__c records
         for (Map<String, Object> job : jobList) {
             Map<String, Object> descriptor = (Map<String, Object>) job.get('MatchedObjectDescriptor');
             List<Object> positionRemunerationList = (List<Object>) descriptor.get('PositionRemuneration');
@@ -150,35 +165,51 @@ public class USAJobsService {
                 : null;
     
             String orgName = (String) descriptor.get('OrganizationName');
-    
-            // Retrieve the Account Id for the organization, or skip if not found
             Id accountId = accountMap.get(orgName);
-            if (accountId == null) {
-                continue;  // Skip this job if the organization does not have an associated Account
-            }
     
-            // Create a new Job_Application__c record
             Job_Application__c jobRecord = new Job_Application__c(
                 Matched_Object_Id__c = (String) job.get('MatchedObjectId'),
                 Position_Title__c = (String) descriptor.get('PositionTitle'),
                 Job_URL__c = (String) descriptor.get('PositionURI'),
-                Company_Name__c = accountId, // This is the lookup to Account
+                Company_Name__c = accountId,
                 Salary__c = salaryInfo != null && salaryInfo.get('MinimumRange') != null 
                     ? Decimal.valueOf((String) salaryInfo.get('MinimumRange')) 
                     : null
             );
     
-            // Add the job record to the insert list
             jobsToInsert.add(jobRecord);
         }
     
-        // Insert the job records if there are any
+        // Step 6: Insert Job Application records
         if (!jobsToInsert.isEmpty()) {
             try {
-                insert jobsToInsert;  // Insert the new Job_Application__c records into Salesforce
+                insert jobsToInsert;
             } catch (DmlException e) {
-                System.debug('Error inserting records: ' + e.getMessage());
+                System.debug('Error inserting job applications: ' + e.getMessage());
             }
+        }
+    }
+    
+    //For testing
+    public static void printJobInfo() {
+        // Check if the parsedJobs list is empty
+        if (parsedJobs.isEmpty()) {
+            System.debug('No jobs to display.'); // Log message if no jobs found
+            return; // Exit the method early
+        }
+    
+        Integer index = 1; // Initialize a counter to track job number
+    
+        // Loop through each job map in the parsedJobs list
+        for (Map<String, String> job : parsedJobs) {
+            System.debug('--- Job ' + index + ' ---'); // Print a header for each job
+    
+            // Loop through each key in the job map
+            for (String key : job.keySet()) {
+                System.debug(key + ': ' + job.get(key)); // Print each key-value pair
+            }
+    
+            index++; // Increment the job counter
         }
     }
 }
