@@ -33,9 +33,9 @@
                 <label>4</label>
             </value>
             <value>
-                <fullName>5 - Why did I apply</fullName>
+                <fullName>5 - Not Interested</fullName>
                 <default>false</default>
-                <label>5 - Why did I apply</label>
+                <label>5 - Not Interested</label>
             </value>
         </valueSetDefinition>
     </valueSet>
