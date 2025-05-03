@@ -134,104 +134,121 @@ public class USAJobsService {
     // Method to save jobs to Salesforce
     public static void saveJobsToSalesforce(List<Map<String, Object>> jobList) {
         List<Job_Application__c> jobsToInsert = new List<Job_Application__c>();
-        List<Account> accountsToInsert = new List<Account>();
-        Map<String, Id> accountMap = new Map<String, Id>();
-        Map<String, Account> accountDetailsByName = new Map<String, Account>();
-    
-        // Step 1: Gather all organization names and MatchedObjectIds
+        Map<String, Account> newAccountsToInsert = new Map<String, Account>();
         Set<String> organizationNames = new Set<String>();
-        Set<String> matchedObjectIds = new Set<String>();
+        Set<String> matchedIds = new Set<String>();
     
         for (Map<String, Object> job : jobList) {
+            matchedIds.add((String) job.get('MatchedObjectId'));
+    
             Map<String, Object> descriptor = (Map<String, Object>) job.get('MatchedObjectDescriptor');
             String orgName = (String) descriptor.get('OrganizationName');
-            String matchedId = (String) job.get('MatchedObjectId');
-    
             if (orgName != null) {
                 organizationNames.add(orgName);
             }
-            if (matchedId != null) {
-                matchedObjectIds.add(matchedId);
-            }
         }
     
-        // Step 2: Query existing Accounts
+        // Get existing Accounts
+        Map<String, Account> accountMap = new Map<String, Account>();
         for (Account acc : [SELECT Id, Name, CreatedDate FROM Account WHERE Name IN :organizationNames]) {
-            accountMap.put(acc.Name, acc.Id);
-            accountDetailsByName.put(acc.Name, acc);
+            accountMap.put(acc.Name, acc);
         }
     
-        // Step 3: Create missing Accounts
-        for (String orgName : organizationNames) {
-            if (!accountMap.containsKey(orgName)) {
-                Account newAcc = new Account(Name = orgName);
-                accountsToInsert.add(newAcc);
-            }
-        }
-    
-        // Step 4: Insert new Accounts and update maps
-        if (!accountsToInsert.isEmpty()) {
-            insert accountsToInsert;
-            for (Account acc : accountsToInsert) {
-                accountMap.put(acc.Name, acc.Id);
-                accountDetailsByName.put(acc.Name, acc);
-            }
-        }
-    
-        // Step 5: Query existing Job_Application__c records by Matched_Object_Id__c
-        Map<String, Job_Application__c> existingJobApps = new Map<String, Job_Application__c>();
+        // Get existing Job Application records by MatchedObjectId__c
+        Set<String> existingMatchedIds = new Set<String>();
         for (Job_Application__c existing : [
-            SELECT Id, Matched_Object_Id__c, Company_Name__r.Name, Company_Name__r.CreatedDate
-            FROM Job_Application__c
-            WHERE Matched_Object_Id__c IN :matchedObjectIds
+            SELECT Id, Matched_Object_Id__c, Company_Name__r.Name, Company_Name__r.CreatedDate 
+            FROM Job_Application__c 
+            WHERE Matched_Object_Id__c IN :matchedIds
         ]) {
-            existingJobApps.put(existing.Matched_Object_Id__c, existing);
+            existingMatchedIds.add(existing.Matched_Object_Id__c);
+            System.debug('Skipping existing Job Application for: ' + existing.Company_Name__r.Name + 
+                         ' (Created: ' + existing.Company_Name__r.CreatedDate + ')');
         }
     
-        // Step 6: Create Job Application records for non-duplicate jobs
         for (Map<String, Object> job : jobList) {
-            String matchedId = (String) job.get('MatchedObjectId');
+            String matchedObjectId = (String) job.get('MatchedObjectId');
     
-            if (existingJobApps.containsKey(matchedId)) {
-                Job_Application__c existingApp = existingJobApps.get(matchedId);
-                System.debug('SKIPPED: Job application already exists for Matched_Object_Id__c: ' + matchedId +
-                             ', Account Name: ' + existingApp.Company_Name__r.Name +
-                             ', Account CreatedDate: ' + existingApp.Company_Name__r.CreatedDate);
-                continue;
+            if (existingMatchedIds.contains(matchedObjectId)) {
+                continue; // Skip existing job record
             }
     
             Map<String, Object> descriptor = (Map<String, Object>) job.get('MatchedObjectDescriptor');
-    
-            List<Object> positionRemunerationList = (List<Object>) descriptor.get('PositionRemuneration');
-            Map<String, Object> salaryInfo = (positionRemunerationList != null && !positionRemunerationList.isEmpty())
-                ? (Map<String, Object>) positionRemunerationList[0]
-                : null;
-    
             String orgName = (String) descriptor.get('OrganizationName');
-            Id accountId = accountMap.get(orgName);
+            if (orgName == null) continue;
     
-            Job_Application__c jobRecord = new Job_Application__c(
-                Matched_Object_Id__c = matchedId,
+            // Get or create Account
+            Id accountId;
+            if (accountMap.containsKey(orgName)) {
+                accountId = accountMap.get(orgName).Id;
+            } else {
+                if (!newAccountsToInsert.containsKey(orgName)) {
+                    newAccountsToInsert.put(orgName, new Account(Name = orgName));
+                }
+            }
+    
+            // Salary and Description extraction
+            List<Object> remunerationList = (List<Object>) descriptor.get('PositionRemuneration');
+            Map<String, Object> salaryInfo = (remunerationList != null && !remunerationList.isEmpty())
+                ? (Map<String, Object>) remunerationList[0] : null;
+    
+            String description = '';
+            if (descriptor.containsKey('UserArea')) {
+                Map<String, Object> userArea = (Map<String, Object>) descriptor.get('UserArea');
+                if (userArea.containsKey('Details')) {
+                    Map<String, Object> details = (Map<String, Object>) userArea.get('Details');
+                    description = (String) details.get('MajorDuties');
+                }
+            }
+    
+            // Create Job Application record
+            Job_Application__c jobApp = new Job_Application__c(
+                Matched_Object_Id__c = matchedObjectId,
                 Position_Title__c = (String) descriptor.get('PositionTitle'),
                 Job_URL__c = (String) descriptor.get('PositionURI'),
-                Company_Name__c = accountId,
-                Salary__c = salaryInfo != null && salaryInfo.get('MinimumRange') != null 
-                    ? Decimal.valueOf((String) salaryInfo.get('MinimumRange')) 
-                    : null
+                Salary__c = (salaryInfo != null && salaryInfo.get('MinimumRange') != null) ?
+                            Decimal.valueOf((String) salaryInfo.get('MinimumRange')) : null,
+                Description__c = description
             );
     
-            jobsToInsert.add(jobRecord);
+            // Temporarily store Account name if not yet inserted
+            if (accountId != null) {
+                jobApp.Company_Name__c = accountId;
+            } else {
+                // Add temp name to track for update after Account insert
+                jobApp.Company_Name__r = new Account(Name = orgName);
+            }
+    
+            jobsToInsert.add(jobApp);
         }
     
-        // Step 7: Insert non-duplicate Job Applications
+        // Insert new Accounts if any
+        if (!newAccountsToInsert.isEmpty()) {
+            insert newAccountsToInsert.values();
+            for (Account acc : newAccountsToInsert.values()) {
+                accountMap.put(acc.Name, acc);
+            }
+        }
+    
+        // Assign Account Ids to Job Application records where needed
+        for (Job_Application__c jobApp : jobsToInsert) {
+            if (jobApp.Company_Name__c == null && jobApp.Company_Name__r != null) {
+                Account acc = accountMap.get(jobApp.Company_Name__r.Name);
+                if (acc != null) {
+                    jobApp.Company_Name__c = acc.Id;
+                }
+            }
+            jobApp.Company_Name__r = null; // Clear relationship field to avoid insert errors
+        }
+    
         if (!jobsToInsert.isEmpty()) {
             try {
                 insert jobsToInsert;
             } catch (DmlException e) {
-                System.debug('Error inserting job applications: ' + e.getMessage());
+                System.debug('DML Exception: ' + e.getMessage());
             }
         }
-    }    
+    }        
     
     //For testing
     public static void printJobInfo() {
