@@ -36,26 +36,23 @@ public class USAJobsService {
         parsedJobs.clear();  // Clear any previous results
         Map<String, Object> jsonResponse = (Map<String, Object>) JSON.deserializeUntyped(responseBody);
         
-        // Ensure SearchResult exists
         if (jsonResponse.containsKey('SearchResult')) {
             Map<String, Object> searchResult = (Map<String, Object>) jsonResponse.get('SearchResult');
-            
-            // Get list of job items
             List<Object> jobItems = (List<Object>) searchResult.get('SearchResultItems');
             
             for (Object item : jobItems) {
                 Map<String, Object> jobWrapper = (Map<String, Object>) item;
-                
-                // Get MatchedObjectId and MatchedObjectDescriptor
                 String matchedObjectId = (String) jobWrapper.get('MatchedObjectId');
                 Map<String, Object> descriptor = (Map<String, Object>) jobWrapper.get('MatchedObjectDescriptor');
                 
-                // Get Position Title and other fields
                 String positionTitle = (String) descriptor.get('PositionTitle');
                 String positionURI = (String) descriptor.get('PositionURI');
                 String organizationName = (String) descriptor.get('OrganizationName');
+                String majorDuties = (String) descriptor.get('UserArea')
+                    != null && ((Map<String, Object>) descriptor.get('UserArea')).containsKey('Details')
+                    ? (String) ((Map<String, Object>) ((Map<String, Object>) descriptor.get('UserArea')).get('Details')).get('MajorDuties')
+                    : '';
                 
-                // Get salary (handle if missing or null)
                 Decimal minSalary = 0;
                 if (descriptor.containsKey('PositionRemuneration')) {
                     List<Object> remunerationList = (List<Object>) descriptor.get('PositionRemuneration');
@@ -65,8 +62,7 @@ public class USAJobsService {
                         minSalary = Decimal.valueOf(minSalaryStr);
                     }
                 }
-                
-                // Get Location (assume first location in PositionLocation array for simplicity)
+    
                 String location = '';
                 if (descriptor.containsKey('PositionLocation')) {
                     List<Object> locations = (List<Object>) descriptor.get('PositionLocation');
@@ -76,14 +72,14 @@ public class USAJobsService {
                     }
                 }
     
-                // Create jobInfo map
                 Map<String, String> jobInfo = new Map<String, String>{
                     'MatchedObjectId' => matchedObjectId,
                     'JobTitle' => positionTitle,
                     'PositionURI' => positionURI,
                     'OrganizationName' => organizationName,
                     'Location' => location,
-                    'Salary' => String.valueOf(minSalary)  // Convert salary to string if needed
+                    'Salary' => String.valueOf(minSalary),
+                    'Description' => majorDuties
                 };
     
                 parsedJobs.add(jobInfo);
@@ -92,52 +88,77 @@ public class USAJobsService {
             System.debug('No SearchResult key found in response.');
         }
     }
+    
 
     // Convert parsed jobs to the format expected by saveJobsToSalesforce (List<Map<String, Object>>)
-    public static List<Map<String, Object>> convertParsedJobsToObject(List<Map<String, String>> parsedJobs) {
-        List<Map<String, Object>> jobList = new List<Map<String, Object>>();
-
+    public static List<Job_Application__c> convertParsedJobsToObject() {
+        List<Job_Application__c> jobRecords = new List<Job_Application__c>();
+    
+        // Collect organization names to map them to Account records
+        Set<String> orgNames = new Set<String>();
         for (Map<String, String> job : parsedJobs) {
-            Map<String, Object> jobMap = new Map<String, Object>();
-
-            jobMap.put('MatchedObjectId', job.get('MatchedObjectId'));
-            jobMap.put('MatchedObjectDescriptor', new Map<String, Object>{
-                'PositionTitle' => job.get('JobTitle'),
-                'PositionURI' => job.get('PositionURI'),
-                'OrganizationName' => job.get('OrganizationName'),
-                'PositionLocation' => new List<Object>{
-                    new Map<String, Object>{'LocationName' => job.get('Location')}
-                },
-                'PositionRemuneration' => new List<Object>{
-                    new Map<String, Object>{'MinimumRange' => job.get('Salary')}
-                }
-            });
-
-            jobList.add(jobMap);
+            String org = job.get('OrganizationName');
+            if (org != null) {
+                orgNames.add(org);
+            }
         }
-
-        return jobList;
+    
+        // Get existing Accounts
+        Map<String, Id> accountMap = new Map<String, Id>();
+        for (Account acc : [SELECT Id, Name FROM Account WHERE Name IN :orgNames]) {
+            accountMap.put(acc.Name, acc.Id);
+        }
+    
+        for (Map<String, String> job : parsedJobs) {
+            String orgName = job.get('OrganizationName');
+            if (orgName == null || !accountMap.containsKey(orgName)) {
+                continue; // Skip if no matching Account
+            }
+    
+            Job_Application__c jobApp = new Job_Application__c(
+                Matched_Object_Id__c = job.get('MatchedObjectId'),
+                Position_Title__c = job.get('JobTitle'),
+                Job_URL__c = job.get('PositionURI'),
+                Company_Name__c = accountMap.get(orgName),
+                Salary__c = String.isNotEmpty(job.get('Salary')) ? Decimal.valueOf(job.get('Salary')) : null,
+                Description__c = job.get('Description') // Set Description from parsed field
+            );
+    
+            jobRecords.add(jobApp);
+        }
+    
+        return jobRecords;
     }
+    
 
     // Method to save jobs to Salesforce
     public static void saveJobsToSalesforce(List<Map<String, Object>> jobList) {
         List<Job_Application__c> jobsToInsert = new List<Job_Application__c>();
         List<Account> accountsToInsert = new List<Account>();
         Map<String, Id> accountMap = new Map<String, Id>();
+        Map<String, Account> accountDetailsByName = new Map<String, Account>();
     
-        // Step 1: Gather organization names from job list
+        // Step 1: Gather all organization names and MatchedObjectIds
         Set<String> organizationNames = new Set<String>();
+        Set<String> matchedObjectIds = new Set<String>();
+    
         for (Map<String, Object> job : jobList) {
             Map<String, Object> descriptor = (Map<String, Object>) job.get('MatchedObjectDescriptor');
             String orgName = (String) descriptor.get('OrganizationName');
+            String matchedId = (String) job.get('MatchedObjectId');
+    
             if (orgName != null) {
                 organizationNames.add(orgName);
+            }
+            if (matchedId != null) {
+                matchedObjectIds.add(matchedId);
             }
         }
     
         // Step 2: Query existing Accounts
-        for (Account acc : [SELECT Id, Name FROM Account WHERE Name IN :organizationNames]) {
+        for (Account acc : [SELECT Id, Name, CreatedDate FROM Account WHERE Name IN :organizationNames]) {
             accountMap.put(acc.Name, acc.Id);
+            accountDetailsByName.put(acc.Name, acc);
         }
     
         // Step 3: Create missing Accounts
@@ -148,17 +169,39 @@ public class USAJobsService {
             }
         }
     
-        // Step 4: Insert new Accounts and update accountMap
+        // Step 4: Insert new Accounts and update maps
         if (!accountsToInsert.isEmpty()) {
             insert accountsToInsert;
             for (Account acc : accountsToInsert) {
                 accountMap.put(acc.Name, acc.Id);
+                accountDetailsByName.put(acc.Name, acc);
             }
         }
     
-        // Step 5: Create Job_Application__c records
+        // Step 5: Query existing Job_Application__c records by Matched_Object_Id__c
+        Map<String, Job_Application__c> existingJobApps = new Map<String, Job_Application__c>();
+        for (Job_Application__c existing : [
+            SELECT Id, Matched_Object_Id__c, Company_Name__r.Name, Company_Name__r.CreatedDate
+            FROM Job_Application__c
+            WHERE Matched_Object_Id__c IN :matchedObjectIds
+        ]) {
+            existingJobApps.put(existing.Matched_Object_Id__c, existing);
+        }
+    
+        // Step 6: Create Job Application records for non-duplicate jobs
         for (Map<String, Object> job : jobList) {
+            String matchedId = (String) job.get('MatchedObjectId');
+    
+            if (existingJobApps.containsKey(matchedId)) {
+                Job_Application__c existingApp = existingJobApps.get(matchedId);
+                System.debug('SKIPPED: Job application already exists for Matched_Object_Id__c: ' + matchedId +
+                             ', Account Name: ' + existingApp.Company_Name__r.Name +
+                             ', Account CreatedDate: ' + existingApp.Company_Name__r.CreatedDate);
+                continue;
+            }
+    
             Map<String, Object> descriptor = (Map<String, Object>) job.get('MatchedObjectDescriptor');
+    
             List<Object> positionRemunerationList = (List<Object>) descriptor.get('PositionRemuneration');
             Map<String, Object> salaryInfo = (positionRemunerationList != null && !positionRemunerationList.isEmpty())
                 ? (Map<String, Object>) positionRemunerationList[0]
@@ -168,7 +211,7 @@ public class USAJobsService {
             Id accountId = accountMap.get(orgName);
     
             Job_Application__c jobRecord = new Job_Application__c(
-                Matched_Object_Id__c = (String) job.get('MatchedObjectId'),
+                Matched_Object_Id__c = matchedId,
                 Position_Title__c = (String) descriptor.get('PositionTitle'),
                 Job_URL__c = (String) descriptor.get('PositionURI'),
                 Company_Name__c = accountId,
@@ -180,7 +223,7 @@ public class USAJobsService {
             jobsToInsert.add(jobRecord);
         }
     
-        // Step 6: Insert Job Application records
+        // Step 7: Insert non-duplicate Job Applications
         if (!jobsToInsert.isEmpty()) {
             try {
                 insert jobsToInsert;
@@ -188,7 +231,7 @@ public class USAJobsService {
                 System.debug('Error inserting job applications: ' + e.getMessage());
             }
         }
-    }
+    }    
     
     //For testing
     public static void printJobInfo() {
