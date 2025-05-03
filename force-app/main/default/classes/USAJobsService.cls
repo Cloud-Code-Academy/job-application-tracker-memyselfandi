@@ -19,7 +19,8 @@ public class USAJobsService {
             // Check if the response status is OK (200)
             if (res.getStatusCode() == 200) {
                 parseJobData(res.getBody());     // Parse the JSON response
-                List<Map<String, Object>> jobList = convertParsedJobsToObject(parsedJobs);
+                List<Map<String, Object>> jobList = convertParsedJobsToObject();
+
                 System.debug('Passing Job List to saveJobsToSalesforce(jobList)');
                 saveJobsToSalesforce(jobList);    // Save jobs to Salesforce
             } else {
@@ -91,44 +92,51 @@ public class USAJobsService {
     
 
     // Convert parsed jobs to the format expected by saveJobsToSalesforce (List<Map<String, Object>>)
-    public static List<Job_Application__c> convertParsedJobsToObject() {
-        List<Job_Application__c> jobRecords = new List<Job_Application__c>();
-    
-        // Collect organization names to map them to Account records
-        Set<String> orgNames = new Set<String>();
-        for (Map<String, String> job : parsedJobs) {
-            String org = job.get('OrganizationName');
-            if (org != null) {
-                orgNames.add(org);
-            }
-        }
-    
-        // Get existing Accounts
-        Map<String, Id> accountMap = new Map<String, Id>();
-        for (Account acc : [SELECT Id, Name FROM Account WHERE Name IN :orgNames]) {
-            accountMap.put(acc.Name, acc.Id);
-        }
+    public static List<Map<String, Object>> convertParsedJobsToObject() {
+        List<Map<String, Object>> jobList = new List<Map<String, Object>>();
     
         for (Map<String, String> job : parsedJobs) {
-            String orgName = job.get('OrganizationName');
-            if (orgName == null || !accountMap.containsKey(orgName)) {
-                continue; // Skip if no matching Account
+            Map<String, Object> descriptor = new Map<String, Object>();
+            descriptor.put('PositionTitle', job.get('JobTitle'));
+            descriptor.put('PositionURI', job.get('PositionURI'));
+            descriptor.put('OrganizationName', job.get('OrganizationName'));
+    
+            // Add PositionRemuneration if Salary is present
+            if (job.containsKey('Salary')) {
+                Map<String, Object> remuneration = new Map<String, Object>{
+                    'MinimumRange' => job.get('Salary')
+                };
+                descriptor.put('PositionRemuneration', new List<Object>{ remuneration });
             }
     
-            Job_Application__c jobApp = new Job_Application__c(
-                Matched_Object_Id__c = job.get('MatchedObjectId'),
-                Position_Title__c = job.get('JobTitle'),
-                Job_URL__c = job.get('PositionURI'),
-                Company_Name__c = accountMap.get(orgName),
-                Salary__c = String.isNotEmpty(job.get('Salary')) ? Decimal.valueOf(job.get('Salary')) : null,
-                Description__c = job.get('Description') // Set Description from parsed field
-            );
+            // Add PositionLocation if Location is present
+            if (job.containsKey('Location')) {
+                Map<String, Object> location = new Map<String, Object>{
+                    'LocationName' => job.get('Location')
+                };
+                descriptor.put('PositionLocation', new List<Object>{ location });
+            }
     
-            jobRecords.add(jobApp);
+            // Add Description if present (under UserArea -> Details -> MajorDuties)
+            if (job.containsKey('Description')) {
+                Map<String, Object> userArea = new Map<String, Object>{
+                    'Details' => new Map<String, Object>{
+                        'MajorDuties' => job.get('Description')
+                    }
+                };
+                descriptor.put('UserArea', userArea);
+            }
+    
+            Map<String, Object> jobObj = new Map<String, Object>{
+                'MatchedObjectId' => job.get('MatchedObjectId'),
+                'MatchedObjectDescriptor' => descriptor
+            };
+    
+            jobList.add(jobObj);
         }
     
-        return jobRecords;
-    }
+        return jobList;
+    }      
     
 
     // Method to save jobs to Salesforce
