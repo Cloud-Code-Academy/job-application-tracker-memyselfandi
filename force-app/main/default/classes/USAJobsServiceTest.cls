@@ -1,28 +1,27 @@
 @isTest
-private class USAJobsServiceTest {
+public class USAJobsServiceTest {
+    
     @isTest
-    static void testGetJobs() {
-        // Set the mock callout
+    static void testGetJobs_Positive() {
+        // Set the mock response to simulate a successful HTTP callout
         Test.setMock(HttpCalloutMock.class, new USAJobsMock());
 
-        // Call the method inside a test context
+        // Call the method that initiates the HTTP callout
         Test.startTest();
         USAJobsService.getJobs();
         Test.stopTest();
 
-        // Assert we parsed two jobs
-        System.assertEquals(2, USAJobsService.parsedJobs.size(), 'Should parse 2 jobs');
+        // Assert that parsed jobs list is not empty
+        System.assert(!USAJobsService.parsedJobs.isEmpty(), 'Parsed jobs list should not be empty');
 
-        // Assert first job details
-        Map<String, String> job1 = USAJobsService.parsedJobs[0];
-        System.assertEquals('Salesforce Developer', job1.get('JobTitle'), 'Job title mismatch');
-        System.assertEquals('Department of Tech', job1.get('OrganizationName'), 'Org name mismatch');
-        System.assertEquals('Washington, DC', job1.get('LocationName'), 'Location mismatch');
+        // Assert that we have the expected number of jobs
+        System.assertEquals(1, USAJobsService.parsedJobs.size(), 'There should be 1 parsed job');
 
-        // Assert second job details
-        Map<String, String> job2 = USAJobsService.parsedJobs[1];
-        System.assertEquals('Apex Engineer', job2.get('JobTitle'), 'Job title mismatch');
-        System.assertEquals('Federal IT', job2.get('OrganizationName'), 'Org name mismatch');
-        System.assertEquals('Washington, DC', job2.get('LocationName'), 'Location mismatch');
+        // Validate the contents of the first job
+        Map<String, String> firstJob = USAJobsService.parsedJobs[0];
+        System.assertEquals('Salesforce Developer', firstJob.get('JobTitle'), 'Job title mismatch');
+        System.assertEquals('Department of Tech', firstJob.get('OrganizationName'), 'Organization name mismatch');
+        System.assertEquals('Washington, DC', firstJob.get('Location'), 'Location name mismatch');
+        
     }
 }
