@@ -493,6 +493,10 @@ public class JobApplicationTriggerHandler {
         );
         tasksToInsert.add(task2);
 
+        //Set the Follow update to today's date - 31 days
+        jobApp.Follow_Up_Date__c = Date.today();
+
+
         if (!tasksToInsert.isEmpty()) {
             insert tasksToInsert;
         }
