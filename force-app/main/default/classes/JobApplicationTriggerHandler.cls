@@ -362,7 +362,7 @@ public class JobApplicationTriggerHandler {
         );
         tasksToInsert.add(task5);
 
-        if (!tasksToInsert.isEmpty()) {
+       if (!tasksToInsert.isEmpty()) {
             insert tasksToInsert;
         }
         
@@ -404,10 +404,13 @@ public class JobApplicationTriggerHandler {
             Subject = 'Evaluate Offer',
             Description = 'Evaluate your offer and decline or accept',
             Status = 'Not Started',
-            Priority = 'Normal',
+            Priority = 'High',
             ActivityDate = Date.today().addDays(4) // Set Due Date to 4 days from today
         );
         tasksToInsert.add(task3);
+
+        //Update the follow update to the following day
+        jobApp.Follow_Up_Date__c = Date.today().addDays(1);
 
         if (!tasksToInsert.isEmpty()) {
             insert tasksToInsert;
