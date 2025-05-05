@@ -29,6 +29,11 @@
     font-weight: normal;
 }
 
+/* Negative value styling for red text */
+.negative-value {
+    color: red;
+}
+
 /* Button top spacing */
 .calculate-button {
     margin-top: 1rem; /* slds-m-top_medium */
