@@ -287,6 +287,10 @@ public class JobApplicationTriggerHandler {
         );
         tasksToInsert.add(task4);
 
+        // Update Application_Date__c and Follow_Up_Date__c fields
+        jobApp.Application_Date__c = Date.today();
+        jobApp.Follow_Up_Date__c = Date.today().addDays(3);
+
         if (!tasksToInsert.isEmpty()) {
             insert tasksToInsert;
         }

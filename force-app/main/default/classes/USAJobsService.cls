@@ -31,29 +31,54 @@ public class USAJobsService {
             System.debug('Exception: ' + e.getMessage());  // Log any errors
         }
     }
-
-    // Helper method to parse the JSON response into a list of job records
     public static void parseJobData(String responseBody) {
-        parsedJobs.clear();  // Clear any previous results
+        parsedJobs.clear();  // Clear existing job records
+    
         Map<String, Object> jsonResponse = (Map<String, Object>) JSON.deserializeUntyped(responseBody);
-        
+    
         if (jsonResponse.containsKey('SearchResult')) {
             Map<String, Object> searchResult = (Map<String, Object>) jsonResponse.get('SearchResult');
             List<Object> jobItems = (List<Object>) searchResult.get('SearchResultItems');
-            
+    
             for (Object item : jobItems) {
                 Map<String, Object> jobWrapper = (Map<String, Object>) item;
                 String matchedObjectId = (String) jobWrapper.get('MatchedObjectId');
                 Map<String, Object> descriptor = (Map<String, Object>) jobWrapper.get('MatchedObjectDescriptor');
-                
+    
                 String positionTitle = (String) descriptor.get('PositionTitle');
                 String positionURI = (String) descriptor.get('PositionURI');
                 String organizationName = (String) descriptor.get('OrganizationName');
-                String majorDuties = (String) descriptor.get('UserArea')
-                    != null && ((Map<String, Object>) descriptor.get('UserArea')).containsKey('Details')
-                    ? (String) ((Map<String, Object>) ((Map<String, Object>) descriptor.get('UserArea')).get('Details')).get('MajorDuties')
-                    : '';
-                
+    
+                String majorDuties = '';
+                if (descriptor.containsKey('UserArea')) {
+                    Object userAreaObj = descriptor.get('UserArea');
+                    if (userAreaObj instanceof Map<String, Object>) {
+                        Map<String, Object> userArea = (Map<String, Object>) userAreaObj;
+                        if (userArea.containsKey('Details')) {
+                            Object detailsObj = userArea.get('Details');
+                            if (detailsObj instanceof Map<String, Object>) {
+                                Map<String, Object> details = (Map<String, Object>) detailsObj;
+                                if (details.containsKey('MajorDuties')) {
+                                    Object dutiesObj = details.get('MajorDuties');
+                                    if (dutiesObj instanceof String) {
+                                        majorDuties = (String) dutiesObj;  // When it's a single string
+                                    } else if (dutiesObj instanceof List<Object>) {
+                                        // Join list items with newline or semicolon
+                                        List<Object> dutiesList = (List<Object>) dutiesObj;
+                                        List<String> dutyStrings = new List<String>();
+                                        for (Object duty : dutiesList) {
+                                            dutyStrings.add(String.valueOf(duty));
+                                        }
+                                        majorDuties = String.join(dutyStrings, '\n');  // or use '; ' if preferred
+                                    } else {
+                                        majorDuties = 'N/A';  // Fallback for unexpected type
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+    
                 Decimal minSalary = 0;
                 if (descriptor.containsKey('PositionRemuneration')) {
                     List<Object> remunerationList = (List<Object>) descriptor.get('PositionRemuneration');
@@ -88,8 +113,7 @@ public class USAJobsService {
         } else {
             System.debug('No SearchResult key found in response.');
         }
-    }
-    
+    }  
 
     // Convert parsed jobs to the format expected by saveJobsToSalesforce (List<Map<String, Object>>)
     public static List<Map<String, Object>> convertParsedJobsToObject() {
@@ -146,6 +170,7 @@ public class USAJobsService {
         Set<String> organizationNames = new Set<String>();
         Set<String> matchedIds = new Set<String>();
     
+        // First, gather all organization names and matched IDs from the job list
         for (Map<String, Object> job : jobList) {
             matchedIds.add((String) job.get('MatchedObjectId'));
     
@@ -156,81 +181,110 @@ public class USAJobsService {
             }
         }
     
-        // Get existing Accounts
+        // Query existing Account records by name to avoid duplicates
         Map<String, Account> accountMap = new Map<String, Account>();
-        for (Account acc : [SELECT Id, Name, CreatedDate FROM Account WHERE Name IN :organizationNames]) {
+        for (Account acc : [SELECT Id, Name FROM Account WHERE Name IN :organizationNames]) {
             accountMap.put(acc.Name, acc);
         }
     
-        // Get existing Job Application records by MatchedObjectId__c
+        // Query existing Job Applications by Matched_Object_Id__c to prevent duplicates
         Set<String> existingMatchedIds = new Set<String>();
         for (Job_Application__c existing : [
-            SELECT Id, Matched_Object_Id__c, Company_Name__r.Name, Company_Name__r.CreatedDate 
+            SELECT Id, Matched_Object_Id__c 
             FROM Job_Application__c 
             WHERE Matched_Object_Id__c IN :matchedIds
         ]) {
             existingMatchedIds.add(existing.Matched_Object_Id__c);
-            System.debug('Skipping existing Job Application for: ' + existing.Company_Name__r.Name + 
-                         ' (Created: ' + existing.Company_Name__r.CreatedDate + ')');
         }
     
+        // Loop through jobs to create Job Application records
         for (Map<String, Object> job : jobList) {
             String matchedObjectId = (String) job.get('MatchedObjectId');
     
+            // Skip if this job was already inserted previously
             if (existingMatchedIds.contains(matchedObjectId)) {
-                continue; // Skip existing job record
+                continue;
             }
     
             Map<String, Object> descriptor = (Map<String, Object>) job.get('MatchedObjectDescriptor');
             String orgName = (String) descriptor.get('OrganizationName');
             if (orgName == null) continue;
     
-            // Get or create Account
+            // Get or prepare to insert Account
             Id accountId;
             if (accountMap.containsKey(orgName)) {
                 accountId = accountMap.get(orgName).Id;
             } else {
                 if (!newAccountsToInsert.containsKey(orgName)) {
-                    newAccountsToInsert.put(orgName, new Account(Name = orgName));
+                    Account newAcc = new Account(Name = orgName);
+                    newAccountsToInsert.put(orgName, newAcc);
                 }
             }
     
-            // Salary and Description extraction
-            List<Object> remunerationList = (List<Object>) descriptor.get('PositionRemuneration');
-            Map<String, Object> salaryInfo = (remunerationList != null && !remunerationList.isEmpty())
-                ? (Map<String, Object>) remunerationList[0] : null;
+            // Extract salary safely
+            Decimal salary;
+            if (descriptor.containsKey('PositionRemuneration')) {
+                List<Object> remunerationList = (List<Object>) descriptor.get('PositionRemuneration');
+                if (!remunerationList.isEmpty()) {
+                    Map<String, Object> salaryInfo = (Map<String, Object>) remunerationList[0];
+                    if (salaryInfo.containsKey('MinimumRange')) {
+                        String minSalaryStr = (String) salaryInfo.get('MinimumRange');
+                        try {
+                            salary = Decimal.valueOf(minSalaryStr);
+                        } catch (Exception e) {
+                            salary = null; // Set to null if not convertible
+                        }
+                    }
+                }
+            }
     
+            // Extract description safely (handle both String and List<Object>)
             String description = '';
             if (descriptor.containsKey('UserArea')) {
                 Map<String, Object> userArea = (Map<String, Object>) descriptor.get('UserArea');
                 if (userArea.containsKey('Details')) {
                     Map<String, Object> details = (Map<String, Object>) userArea.get('Details');
-                    description = (String) details.get('MajorDuties');
+                    if (details.containsKey('MajorDuties')) {
+                        Object dutiesObj = details.get('MajorDuties');
+    
+                        if (dutiesObj instanceof String) {
+                            // Case: Single string
+                            description = (String) dutiesObj;
+                        } else if (dutiesObj instanceof List<Object>) {
+                            // Case: List of duties
+                            List<Object> dutiesList = (List<Object>) dutiesObj;
+                            List<String> duties = new List<String>();
+                            for (Object duty : dutiesList) {
+                                duties.add(String.valueOf(duty));
+                            }
+                            description = String.join(duties, '\n');
+                        } else {
+                            description = 'N/A'; // Fallback
+                        }
+                    }
                 }
             }
     
-            // Create Job Application record
+            // Create Job_Application__c record
             Job_Application__c jobApp = new Job_Application__c(
                 Matched_Object_Id__c = matchedObjectId,
                 Position_Title__c = (String) descriptor.get('PositionTitle'),
                 Job_URL__c = (String) descriptor.get('PositionURI'),
-                Salary__c = (salaryInfo != null && salaryInfo.get('MinimumRange') != null) ?
-                            Decimal.valueOf((String) salaryInfo.get('MinimumRange')) : null,
+                Salary__c = salary,
                 Description__c = description
             );
     
-            // Temporarily store Account name if not yet inserted
+            // Set temporary Account reference if needed
             if (accountId != null) {
                 jobApp.Company_Name__c = accountId;
             } else {
-                // Add temp name to track for update after Account insert
                 jobApp.Company_Name__r = new Account(Name = orgName);
             }
     
             jobsToInsert.add(jobApp);
         }
     
-        // Insert new Accounts if any
+        // Insert new Accounts and update map with newly generated Ids
         if (!newAccountsToInsert.isEmpty()) {
             insert newAccountsToInsert.values();
             for (Account acc : newAccountsToInsert.values()) {
@@ -238,7 +292,7 @@ public class USAJobsService {
             }
         }
     
-        // Assign Account Ids to Job Application records where needed
+        // Reassign Account Ids to job applications if they were inserted earlier
         for (Job_Application__c jobApp : jobsToInsert) {
             if (jobApp.Company_Name__c == null && jobApp.Company_Name__r != null) {
                 Account acc = accountMap.get(jobApp.Company_Name__r.Name);
@@ -246,17 +300,18 @@ public class USAJobsService {
                     jobApp.Company_Name__c = acc.Id;
                 }
             }
-            jobApp.Company_Name__r = null; // Clear relationship field to avoid insert errors
+            jobApp.Company_Name__r = null; // Clear reference field to avoid DML error
         }
     
+        // Final insert of Job Applications
         if (!jobsToInsert.isEmpty()) {
             try {
                 insert jobsToInsert;
             } catch (DmlException e) {
-                System.debug('DML Exception: ' + e.getMessage());
+                System.debug('DML Exception while inserting Job Applications: ' + e.getMessage());
             }
         }
-    }        
+    }   
     
     //For testing
     public static void printJobInfo() {
