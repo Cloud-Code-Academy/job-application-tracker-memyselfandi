@@ -430,7 +430,7 @@ public class JobApplicationTriggerHandler {
             Subject = 'Plan Resignation',
             Description = 'Plan your resignation if applicable',
             Status = 'Not Started',
-            Priority = 'Normal',
+            Priority = 'High',
             ActivityDate = Date.today().addDays(5) // Set Due Date to 5 days later
         );
         tasksToInsert.add(task1);
@@ -442,7 +442,7 @@ public class JobApplicationTriggerHandler {
             Subject = 'Relax and Recharge',
             Description = 'Take some time to relax and recharge',
             Status = 'Not Started',
-            Priority = 'Normal',
+            Priority = 'High',
             ActivityDate = Date.today().addDays(5) // Set Due Date to 5 days later
         );
         tasksToInsert.add(task2);
@@ -454,7 +454,7 @@ public class JobApplicationTriggerHandler {
             Subject = 'Prepare for Onboarding',
             Description = 'Prepare for your first day of onboarding',
             Status = 'Not Started',
-            Priority = 'Normal',
+            Priority = 'Low',
             ActivityDate = Date.today().addDays(5) // Set Due Date to 5 days later
         );
         tasksToInsert.add(task3);
@@ -476,7 +476,7 @@ public class JobApplicationTriggerHandler {
             Subject = 'Send Follow-Up Email',
             Description = 'Send a follow-up email thanking the interviewer and asking for feedback',
             Status = 'Not Started',
-            Priority = 'Normal',
+            Priority = 'High',
             ActivityDate = Date.today().addDays(6) // Set Due Date to 6 days from today
         );
         tasksToInsert.add(task1);
