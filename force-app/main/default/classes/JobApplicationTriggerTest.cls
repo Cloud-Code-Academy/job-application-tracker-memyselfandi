@@ -1,53 +1,57 @@
 @isTest
 private class JobApplicationTriggerTest {
 
-    // Simulated handler class flag (if applicable in your design)
-    public class TestHandler extends JobApplicationTriggerHandler {
-        public static Boolean wasCalled = false;
-
-        // This override would be used if your actual handler supports overriding for tests
-        public static override void handleStatusChange(List<Job_Application__c> newList, Map<Id, Job_Application__c> oldMap) {
-            wasCalled = true;
-        }
-    }
-
     @isTest
     static void testPositiveStatusChange() {
         // Create a new Job_Application__c record with initial status "Applied"
         Job_Application__c jobApp = new Job_Application__c(
-            Name = 'Software Engineer Role',
-            Status__c = 'Applied'
+            Status__c = 'Applied',
+            Application_Date__c = Date.today()
         );
-        insert jobApp; // Insert the record to trigger the BEFORE INSERT logic
+        insert jobApp;
 
         // Change the status to simulate a valid status change
-        jobApp.Status__c = 'Interview';
-        update jobApp; // Update the record to trigger the BEFORE UPDATE logic
+        jobApp.Status__c = 'Interviewing';
+        update jobApp;
 
         // Re-query the record to verify the status was updated
-        Job_Application__c updatedJobApp = [SELECT Status__c FROM Job_Application__c WHERE Id = :jobApp.Id];
+        Job_Application__c updatedJobApp = [
+            SELECT Status__c FROM Job_Application__c WHERE Id = :jobApp.Id
+        ];
 
-        // Assert that the status was correctly changed to "Interview"
-        System.assertEquals('Interview', updatedJobApp.Status__c, 'Status should be updated to Interview');
+        // Assert that the status was correctly changed
+        System.assertEquals('Interviewing', updatedJobApp.Status__c, 'Status should be updated to Interviewing');
+
+        // Optionally verify a related task was created (if your handler creates one)
+        List<Task> tasks = [
+            SELECT Subject, WhatId FROM Task WHERE WhatId = :jobApp.Id
+        ];
+        System.assert(tasks.size() > 0, 'A follow-up Task should be created');
     }
 
     @isTest
     static void testNegativeNoStatusChange() {
         // Create a new Job_Application__c record with status "Applied"
         Job_Application__c jobApp = new Job_Application__c(
-            Name = 'Backend Developer Role',
-            Status__c = 'Applied'
+            Status__c = 'Applied',
+            Application_Date__c = Date.today()
         );
-        insert jobApp; // Insert to trigger BEFORE INSERT
+        insert jobApp;
 
-        // Update a field other than the status (here we update Name only)
-        jobApp.Name = 'Backend Developer Role (Updated)';
-        update jobApp; // Triggers BEFORE UPDATE, but status has not changed
+        // Update a field other than the status
+        jobApp.Notes__c = 'Backend Developer Role (Updated)';
+        update jobApp;
 
-        // Re-query the record to confirm the status is still "Applied"
-        Job_Application__c unchangedStatusApp = [SELECT Status__c FROM Job_Application__c WHERE Id = :jobApp.Id];
+        // Re-query the record to confirm the status is unchanged
+        Job_Application__c unchangedJobApp = [
+            SELECT Status__c FROM Job_Application__c WHERE Id = :jobApp.Id
+        ];
+        System.assertEquals('Applied', unchangedJobApp.Status__c, 'Status should not change');
 
-        // Assert that the status did not change
-        System.assertEquals('Applied', unchangedStatusApp.Status__c, 'Status should not change');
+        // Optionally check that no new task was created due to no status change
+        List<Task> tasks = [
+            SELECT Id FROM Task WHERE WhatId = :jobApp.Id
+        ];
+        System.assertEquals(0, tasks.size(), 'No task should be created when status does not change');
     }
 }

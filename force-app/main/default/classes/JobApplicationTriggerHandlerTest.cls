@@ -1,60 +1,103 @@
 @isTest
-private class JobApplicationTriggerHandlerTest {
-    
-    @isTest
-    static void testStatusChangeCreatesTask() {
-        // Step 1: Create a Job Application with initial status
-        Job_Application__c jobApp = new Job_Application__c(
-            Name = 'Test Application',
-            Status__c = 'Applied'
+public class JobApplicationTriggerHandlerTest {
+
+    // Utility method to create a Job_Application__c record with a valid status
+    private static Job_Application__c createJobApplication(String status) {
+        return new Job_Application__c(
+            Status__c = status,
+            Application_Date__c = Date.today()
         );
-        insert jobApp;
-
-        // Step 2: Update the status to trigger Task creation
-        jobApp.Status__c = 'Interview Scheduled';
-        Test.startTest();
-        update jobApp;
-        Test.stopTest();
-
-        // Step 3: Verify that a Task was created with the correct subject
-        List<Task> tasks = [SELECT Id, Subject, WhatId FROM Task WHERE WhatId = :jobApp.Id];
-        System.assertEquals(1, tasks.size(), 'One Task should be created');
-        System.assertEquals('Prepare for Interview', tasks[0].Subject, 'Subject should match expected value');
     }
 
+    // Test for 'Interviewing' status - follow-up task should be created
     @isTest
-    static void testStatusChangeToOfferReceived() {
-        Job_Application__c jobApp = new Job_Application__c(
-            Name = 'Test Application 2',
-            Status__c = 'Interview Scheduled'
-        );
-        insert jobApp;
+    static void testStatusInterviewingCreatesFollowUpTask() {
+        Job_Application__c job = createJobApplication('Applied');
+        insert job;
 
-        jobApp.Status__c = 'Offer Received';
-        Test.startTest();
-        update jobApp;
-        Test.stopTest();
+        job.Status__c = 'Interviewing';
+        update job;
 
-        List<Task> tasks = [SELECT Id, Subject FROM Task WHERE WhatId = :jobApp.Id];
-        System.assertEquals(1, tasks.size(), 'One Task should be created for Offer Received');
-        System.assertEquals('Review Job Offer', tasks[0].Subject, 'Subject should match expected value');
+        List<Task> tasks = [SELECT Subject FROM Task WHERE WhatId = :job.Id];
+        System.assertEquals(1, tasks.size());
+        System.assertEquals('Prepare for interview', tasks[0].Subject);
     }
 
+    // Test for 'Saved' status - no task should be created
     @isTest
-    static void testNoTaskWhenStatusUnchanged() {
-        Job_Application__c jobApp = new Job_Application__c(
-            Name = 'Test Application 3',
-            Status__c = 'Applied'
-        );
-        insert jobApp;
+    static void testStatusSaved() {
+        Job_Application__c job = createJobApplication('Applying');
+        insert job;
 
-        // Status does not change
-        jobApp.Name = 'Test Application Updated';
-        Test.startTest();
-        update jobApp;
-        Test.stopTest();
+        job.Status__c = 'Saved';
+        update job;
 
-        List<Task> tasks = [SELECT Id FROM Task WHERE WhatId = :jobApp.Id];
-        System.assertEquals(0, tasks.size(), 'No Task should be created when status does not change');
+        List<Task> tasks = [SELECT Id FROM Task WHERE WhatId = :job.Id];
+        System.assertEquals(0, tasks.size());
+    }
+
+    // Test for 'Applying' status
+    @isTest
+    static void testStatusApplying() {
+        Job_Application__c job = createJobApplication('Saved');
+        insert job;
+
+        job.Status__c = 'Applying';
+        update job;
+
+        List<Task> tasks = [SELECT Id FROM Task WHERE WhatId = :job.Id];
+        System.assertEquals(0, tasks.size());
+    }
+
+    // Test for 'Applied' status
+    @isTest
+    static void testStatusApplied() {
+        Job_Application__c job = createJobApplication('Applying');
+        insert job;
+
+        job.Status__c = 'Applied';
+        update job;
+
+        List<Task> tasks = [SELECT Id FROM Task WHERE WhatId = :job.Id];
+        System.assertEquals(0, tasks.size());
+    }
+
+    // Test for 'Negotiating' status
+    @isTest
+    static void testStatusNegotiating() {
+        Job_Application__c job = createJobApplication('Interviewing');
+        insert job;
+
+        job.Status__c = 'Negotiating';
+        update job;
+
+        List<Task> tasks = [SELECT Id FROM Task WHERE WhatId = :job.Id];
+        System.assertEquals(0, tasks.size());
+    }
+
+    // Test for 'Accepted' status
+    @isTest
+    static void testStatusAccepted() {
+        Job_Application__c job = createJobApplication('Negotiating');
+        insert job;
+
+        job.Status__c = 'Accepted';
+        update job;
+
+        List<Task> tasks = [SELECT Id FROM Task WHERE WhatId = :job.Id];
+        System.assertEquals(0, tasks.size());
+    }
+
+    // Test for 'Closed' status
+    @isTest
+    static void testStatusClosed() {
+        Job_Application__c job = createJobApplication('Accepted');
+        insert job;
+
+        job.Status__c = 'Closed';
+        update job;
+
+        List<Task> tasks = [SELECT Id FROM Task WHERE WhatId = :job.Id];
+        System.assertEquals(0, tasks.size());
     }
 }
