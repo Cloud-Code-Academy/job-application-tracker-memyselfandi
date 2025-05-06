@@ -470,9 +470,35 @@ public class JobApplicationTriggerHandler {
     // Specific handler for 'Closed' Status
     private static void handleClosed(Job_Application__c jobApp) {
         System.debug('Handling Closed status for Job Application: ' + jobApp.Id);
-        // No specific tasks are created for the 'Closed' status in this example,
-        // but you might want to perform other actions here, such as archiving
-        // related records or sending out feedback surveys.
-        System.debug('No specific tasks for Closed status.');
+        List<Task> tasksToInsert = new List<Task>();
+
+        // Task 1: Research your market value and know your numbers
+        Task task1 = new Task(
+            WhatId = jobApp.Id,
+            OwnerId = jobApp.OwnerId,
+            Subject = 'Send a follow-up email',
+            Description = 'Send a follow-up email thanking the interviewer and asking for feedback',
+            Status = 'Not Started',
+            Priority = 'Normal',
+            ActivityDate = Date.today().addDays(1) // Set Due Date to 4 days from today
+        );
+        tasksToInsert.add(task1);
+
+        // Task 2: Prepare your negotiation scripts
+        Task task2 = new Task(
+            WhatId = jobApp.Id,
+            OwnerId = jobApp.OwnerId,
+            Subject = 'Review your notes',
+            Description = 'Review your notes and reflect on areas of improvement',
+            Status = 'Not Started',
+            Priority = 'Normal',
+            ActivityDate = Date.today().addDays(1) // Set Due Date to 4 days from today
+        );
+        tasksToInsert.add(task2);
+
+        
+        if (!tasksToInsert.isEmpty()) {
+            insert tasksToInsert;
+        }
     }
 }
