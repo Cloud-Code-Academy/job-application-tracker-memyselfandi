@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Contact_Type__c</fullName>
+    <defaultValue>&quot;Other&quot;</defaultValue>
+    <description>Primary Contact – The main point of contact for an account, deal, or case.
+Technical Contact – The go-to person for product implementation or technical issues.
+Decision Maker – The individual with authority to make purchasing or strategic decisions.
+Influencer – Someone who may not make the final decision but has influence over it.
+Other – A flexible category for anything that doesn’t fit the above types.</description>
+    <externalId>false</externalId>
+    <label>Contact Type</label>
+    <required>true</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Primary Contact</fullName>
+                <default>true</default>
+                <label>Primary Contact</label>
+            </value>
+            <value>
+                <fullName>Technical Contact</fullName>
+                <default>false</default>
+                <label>Technical Contact</label>
+            </value>
+            <value>
+                <fullName>Decision Maker</fullName>
+                <default>false</default>
+                <label>Decision Maker</label>
+            </value>
+            <value>
+                <fullName>Influencer</fullName>
+                <default>false</default>
+                <label>Influencer</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,1294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <description>Check if the job description aligns with your interests and values</description>
+        <name>Check_Job_Description_Saved</name>
+        <label>Check Job Description - Saved</label>
+        <locationX>1370</locationX>
+        <locationY>431</locationY>
+        <actionName>NewTask</actionName>
+        <actionType>quickAction</actionType>
+        <connector>
+            <targetReference>Review_the_highlighted_skills_Saved</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>Subject</name>
+            <value>
+                <stringValue>Check if the job description aligns with your interests and values</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>contextId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Status</name>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Priority</name>
+            <value>
+                <stringValue>Normal</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>OwnerId</name>
+            <value>
+                <elementReference>recordOwnerId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Description</name>
+            <value>
+                <stringValue>Research the Company and look for Referral Possibilities</stringValue>
+            </value>
+        </inputParameters>
+        <nameSegment>NewTask</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <description>Continue identifying and saving similar job opportunities</description>
+        <name>Continue_identifying_and_saving_similar_job_opportunities_Applied</name>
+        <label>Continue identifying and saving similar job opportunities - Applied</label>
+        <locationX>314</locationX>
+        <locationY>647</locationY>
+        <actionName>NewTask</actionName>
+        <actionType>quickAction</actionType>
+        <connector>
+            <targetReference>Set_up_weekly_networking_calls_to_explore_similar_companies_roles_Applied</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>Subject</name>
+            <value>
+                <stringValue>Continue identifying and saving similar job opportunities</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>contextId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Status</name>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Priority</name>
+            <value>
+                <stringValue>Normal</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>OwnerId</name>
+            <value>
+                <elementReference>recordOwnerId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>NewTask</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <description>Review your notes and reflect on areas of improvement</description>
+        <name>Create_Closed_Task_Optional_Closed</name>
+        <label>Create Closed Task (Optional) - Closed</label>
+        <locationX>1634</locationX>
+        <locationY>539</locationY>
+        <actionName>NewTask</actionName>
+        <actionType>quickAction</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>Subject</name>
+            <value>
+                <stringValue>Review your notes and reflect on areas of improvement</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>contextId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Status</name>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Priority</name>
+            <value>
+                <stringValue>Normal</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>OwnerId</name>
+            <value>
+                <elementReference>recordOwnerId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>NewTask</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <description>Follow up on your application via email weekly</description>
+        <name>Create_Follow_Up_Task_Applied</name>
+        <label>Create Follow Up Task - Applied</label>
+        <locationX>314</locationX>
+        <locationY>539</locationY>
+        <actionName>NewTask</actionName>
+        <actionType>quickAction</actionType>
+        <connector>
+            <targetReference>Continue_identifying_and_saving_similar_job_opportunities_Applied</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>Subject</name>
+            <value>
+                <stringValue>Follow up on your application via email weekly</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>contextId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Status</name>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Priority</name>
+            <value>
+                <stringValue>Normal</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>ActivityDate</name>
+            <value>
+                <elementReference>DueDatePlus7</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>OwnerId</name>
+            <value>
+                <elementReference>recordOwnerId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>NewTask</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <description>Tasks to be completed after accepting offer</description>
+        <name>Create_Onboarding_Task</name>
+        <label>Create Onboarding Task - Accepted</label>
+        <locationX>1106</locationX>
+        <locationY>647</locationY>
+        <actionName>NewTask</actionName>
+        <actionType>quickAction</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>Subject</name>
+            <value>
+                <stringValue>Prepare for your first day of onboarding- Complete onboarding paperwork</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>contextId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Status</name>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Priority</name>
+            <value>
+                <stringValue>Normal</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>OwnerId</name>
+            <value>
+                <elementReference>recordOwnerId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>NewTask</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <description>Tasks to be completed prior to your interview</description>
+        <name>Create_Prepare_for_Interview_Task</name>
+        <label>Create Prepare for Interview Task</label>
+        <locationX>578</locationX>
+        <locationY>431</locationY>
+        <actionName>NewTask</actionName>
+        <actionType>quickAction</actionType>
+        <connector>
+            <targetReference>Practice_answering_behavioral_interview_questions_Interviewing</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>Subject</name>
+            <value>
+                <stringValue>Prepare your blurb or “tell me about yourself” response</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>contextId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Status</name>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Priority</name>
+            <value>
+                <stringValue>Normal</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>OwnerId</name>
+            <value>
+                <elementReference>recordOwnerId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Description</name>
+            <value>
+                <stringValue>&quot;Prepare for [Interview Type] with [Interviewer Name/Title] on [Date/Time].&quot;</stringValue>
+            </value>
+        </inputParameters>
+        <nameSegment>NewTask</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <description>Tasks to be completed after receiving an offer</description>
+        <name>Create_Review_Offer_Task_Negotiating</name>
+        <label>Create Review Offer Task - Negotiating</label>
+        <locationX>842</locationX>
+        <locationY>431</locationY>
+        <actionName>NewTask</actionName>
+        <actionType>quickAction</actionType>
+        <connector>
+            <targetReference>Prepare_counter_offer_points_if_applicable_Negotiating</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>Subject</name>
+            <value>
+                <stringValue>Research your market value and know your numbers</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>contextId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Status</name>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Priority</name>
+            <value>
+                <stringValue>Normal</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>OwnerId</name>
+            <value>
+                <elementReference>recordOwnerId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>NewTask</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <description>Customize your work achievements using the job description keywords</description>
+        <name>Customize_your_work_achievements</name>
+        <label>Customize your work achievements</label>
+        <locationX>50</locationX>
+        <locationY>755</locationY>
+        <actionName>NewTask</actionName>
+        <actionType>quickAction</actionType>
+        <connector>
+            <targetReference>Submit_your_application</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>contextId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Subject</name>
+            <value>
+                <stringValue>Customize your work achievements using the job description keywords</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Status</name>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Priority</name>
+            <value>
+                <stringValue>Normal</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>OwnerId</name>
+            <value>
+                <elementReference>recordOwnerId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>NewTask</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <description>Schedule a call with the hiring manager to discuss the offer.</description>
+        <name>Evaluate_your_offer_and_decline_or_accept_Negotiating</name>
+        <label>Evaluate your offer and decline or accept- Negotiating</label>
+        <locationX>842</locationX>
+        <locationY>647</locationY>
+        <actionName>NewTask</actionName>
+        <actionType>quickAction</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>Subject</name>
+            <value>
+                <stringValue>Evaluate your offer and decline or accept</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>contextId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Status</name>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Priority</name>
+            <value>
+                <stringValue>Normal</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>OwnerId</name>
+            <value>
+                <elementReference>recordOwnerId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Description</name>
+            <value>
+                <stringValue>Schedule a call with the hiring manager to discuss the offer.</stringValue>
+            </value>
+        </inputParameters>
+        <nameSegment>NewTask</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <description>Find and research someone who works at the company and add them as a contact</description>
+        <name>Find_Someone_at_the_Company</name>
+        <label>Find Someone at the Company</label>
+        <locationX>50</locationX>
+        <locationY>431</locationY>
+        <actionName>NewTask</actionName>
+        <actionType>quickAction</actionType>
+        <connector>
+            <targetReference>Set_up_an_informational_interview</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>contextId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Subject</name>
+            <value>
+                <stringValue>Find and research someone who works at the company and add them as a contact</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Status</name>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Priority</name>
+            <value>
+                <stringValue>Normal</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>OwnerId</name>
+            <value>
+                <elementReference>recordOwnerId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>NewTask</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <description>Identify potential referrals to help get your application on the top of the pile</description>
+        <name>Identify_potential_referrals</name>
+        <label>Identify potential referrals</label>
+        <locationX>50</locationX>
+        <locationY>647</locationY>
+        <actionName>NewTask</actionName>
+        <actionType>quickAction</actionType>
+        <connector>
+            <targetReference>Customize_your_work_achievements</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>contextId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Subject</name>
+            <value>
+                <stringValue>Identify potential referrals to help get your application on the top of the pile</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Status</name>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Priority</name>
+            <value>
+                <stringValue>Normal</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>OwnerId</name>
+            <value>
+                <elementReference>recordOwnerId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>NewTask</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <description>Plan your resignation if applicable</description>
+        <name>Plan_your_resignation_if_applicable</name>
+        <label>Plan your resignation if applicable</label>
+        <locationX>1106</locationX>
+        <locationY>431</locationY>
+        <actionName>NewTask</actionName>
+        <actionType>quickAction</actionType>
+        <connector>
+            <targetReference>Take_some_time_to_relax_and_recharge_Accepted</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>Subject</name>
+            <value>
+                <stringValue>Plan your resignation if applicable</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>contextId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Status</name>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Priority</name>
+            <value>
+                <stringValue>Normal</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>OwnerId</name>
+            <value>
+                <elementReference>recordOwnerId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>NewTask</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <description>Practice answering behavioral interview questions</description>
+        <name>Practice_answering_behavioral_interview_questions_Interviewing</name>
+        <label>Practice answering behavioral interview questions - Interviewing</label>
+        <locationX>578</locationX>
+        <locationY>539</locationY>
+        <actionName>NewTask</actionName>
+        <actionType>quickAction</actionType>
+        <connector>
+            <targetReference>Research_the_company_and_your_interviewers_Interview</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>Subject</name>
+            <value>
+                <stringValue>Practice answering behavioral interview questions</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>contextId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Status</name>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Priority</name>
+            <value>
+                <stringValue>Normal</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>OwnerId</name>
+            <value>
+                <elementReference>recordOwnerId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>NewTask</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <description>Prepare your negotiation scripts</description>
+        <name>Prepare_counter_offer_points_if_applicable_Negotiating</name>
+        <label>Prepare counter-offer points (if applicable) - Negotiating</label>
+        <locationX>842</locationX>
+        <locationY>539</locationY>
+        <actionName>NewTask</actionName>
+        <actionType>quickAction</actionType>
+        <connector>
+            <targetReference>Evaluate_your_offer_and_decline_or_accept_Negotiating</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>Subject</name>
+            <value>
+                <stringValue>Prepare counter-offer points (if applicable) - Check with colleagues - Prepare your negotiation scripts</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>contextId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Status</name>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Priority</name>
+            <value>
+                <stringValue>Normal</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>OwnerId</name>
+            <value>
+                <elementReference>recordOwnerId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>NewTask</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <description>Reach out to the hiring manager or recruiter</description>
+        <name>Reach_out_to_the_hiring_manager_or_recruiter_Applied</name>
+        <label>Reach out to the hiring manager or recruiter - Applied</label>
+        <locationX>314</locationX>
+        <locationY>431</locationY>
+        <actionName>NewTask</actionName>
+        <actionType>quickAction</actionType>
+        <connector>
+            <targetReference>Create_Follow_Up_Task_Applied</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>Subject</name>
+            <value>
+                <stringValue>Reach out to the hiring manager or recruiter</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>contextId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Status</name>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Priority</name>
+            <value>
+                <stringValue>Normal</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>OwnerId</name>
+            <value>
+                <elementReference>recordOwnerId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>NewTask</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <description>Research the company or role and mark your excitement level</description>
+        <name>Research_and_mark_your_excitement_level_Saved</name>
+        <label>Research and mark your excitement level - Saved</label>
+        <locationX>1370</locationX>
+        <locationY>647</locationY>
+        <actionName>NewTask</actionName>
+        <actionType>quickAction</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>Subject</name>
+            <value>
+                <stringValue>Research the company or role and mark your excitement level</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>contextId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Status</name>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Priority</name>
+            <value>
+                <stringValue>Normal</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>OwnerId</name>
+            <value>
+                <elementReference>recordOwnerId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>NewTask</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <description>Research the company and your interviewers</description>
+        <name>Research_the_company_and_your_interviewers_Interview</name>
+        <label>Research the company and your interviewers - Interview</label>
+        <locationX>578</locationX>
+        <locationY>647</locationY>
+        <actionName>NewTask</actionName>
+        <actionType>quickAction</actionType>
+        <connector>
+            <targetReference>Set_up_your_virtual_interview_space_and_test_your_tech_INterview</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>Subject</name>
+            <value>
+                <stringValue>Research the company and your interviewers</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>contextId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Status</name>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Priority</name>
+            <value>
+                <stringValue>Normal</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>OwnerId</name>
+            <value>
+                <elementReference>recordOwnerId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>NewTask</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <description>Review the highlighted skills to see if the role is a good fit</description>
+        <name>Review_the_highlighted_skills_Saved</name>
+        <label>Review the highlighted skills - Saved</label>
+        <locationX>1370</locationX>
+        <locationY>539</locationY>
+        <actionName>NewTask</actionName>
+        <actionType>quickAction</actionType>
+        <connector>
+            <targetReference>Research_and_mark_your_excitement_level_Saved</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>Subject</name>
+            <value>
+                <stringValue>Review the highlighted skills to see if the role is a good fit</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>contextId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Status</name>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Priority</name>
+            <value>
+                <stringValue>Normal</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>OwnerId</name>
+            <value>
+                <elementReference>recordOwnerId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>NewTask</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <description>Send a follow-up email thanking the interviewer and asking for feedback</description>
+        <name>Send_a_follow_up_email_thanking_the_interviewer_Closed</name>
+        <label>Send a follow-up email thanking the interviewer - Closed</label>
+        <locationX>1634</locationX>
+        <locationY>431</locationY>
+        <actionName>NewTask</actionName>
+        <actionType>quickAction</actionType>
+        <connector>
+            <targetReference>Create_Closed_Task_Optional_Closed</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>Subject</name>
+            <value>
+                <stringValue>Send a follow-up email thanking the interviewer and asking for feedback</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>contextId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Status</name>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Priority</name>
+            <value>
+                <stringValue>Normal</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>OwnerId</name>
+            <value>
+                <elementReference>recordOwnerId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>NewTask</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <description>Task (after the interview):</description>
+        <name>Send_thank_you_note_to_interviewer_s</name>
+        <label>After Interview Task - Interviewing</label>
+        <locationX>578</locationX>
+        <locationY>863</locationY>
+        <actionName>NewTask</actionName>
+        <actionType>quickAction</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>Subject</name>
+            <value>
+                <stringValue>Send thank-you note to interviewer(s).</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>contextId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Status</name>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Priority</name>
+            <value>
+                <stringValue>High</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>OwnerId</name>
+            <value>
+                <elementReference>recordOwnerId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>NewTask</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <description>Set up an informational interview to learn more about the role/company</description>
+        <name>Set_up_an_informational_interview</name>
+        <label>Set up an informational interview</label>
+        <locationX>50</locationX>
+        <locationY>539</locationY>
+        <actionName>NewTask</actionName>
+        <actionType>quickAction</actionType>
+        <connector>
+            <targetReference>Identify_potential_referrals</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>contextId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Subject</name>
+            <value>
+                <stringValue>Set up an informational interview to learn more about the role/company</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Status</name>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Priority</name>
+            <value>
+                <stringValue>Normal</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>OwnerId</name>
+            <value>
+                <elementReference>recordOwnerId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>NewTask</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <description>Set up weekly networking calls to explore similar companies/roles</description>
+        <name>Set_up_weekly_networking_calls_to_explore_similar_companies_roles_Applied</name>
+        <label>Set up weekly networking calls to explore similar companies/roles - Applied</label>
+        <locationX>314</locationX>
+        <locationY>755</locationY>
+        <actionName>NewTask</actionName>
+        <actionType>quickAction</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>Subject</name>
+            <value>
+                <stringValue>Set up weekly networking calls to explore similar companies/roles</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>contextId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Status</name>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Priority</name>
+            <value>
+                <stringValue>Normal</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>OwnerId</name>
+            <value>
+                <elementReference>recordOwnerId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>NewTask</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <description>Set up your virtual interview space and test your tech</description>
+        <name>Set_up_your_virtual_interview_space_and_test_your_tech_INterview</name>
+        <label>Set up your virtual interview space and test your tech - INterview -</label>
+        <locationX>578</locationX>
+        <locationY>755</locationY>
+        <actionName>NewTask</actionName>
+        <actionType>quickAction</actionType>
+        <connector>
+            <targetReference>Send_thank_you_note_to_interviewer_s</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>Subject</name>
+            <value>
+                <stringValue>Set up your virtual interview space and test your tech</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>contextId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Status</name>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Priority</name>
+            <value>
+                <stringValue>Normal</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>OwnerId</name>
+            <value>
+                <elementReference>recordOwnerId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>NewTask</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <description>Submit your application on the company website if possible</description>
+        <name>Submit_your_application</name>
+        <label>Submit your application</label>
+        <locationX>50</locationX>
+        <locationY>863</locationY>
+        <actionName>NewTask</actionName>
+        <actionType>quickAction</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>contextId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Subject</name>
+            <value>
+                <stringValue>Submit your application on the company website if possible/Save PDF</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Status</name>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Priority</name>
+            <value>
+                <stringValue>Normal</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>OwnerId</name>
+            <value>
+                <elementReference>recordOwnerId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>NewTask</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <description>Take some time to relax and recharge</description>
+        <name>Take_some_time_to_relax_and_recharge_Accepted</name>
+        <label>Take some time to relax and recharge - Accepted</label>
+        <locationX>1106</locationX>
+        <locationY>539</locationY>
+        <actionName>NewTask</actionName>
+        <actionType>quickAction</actionType>
+        <connector>
+            <targetReference>Create_Onboarding_Task</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>contextId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Subject</name>
+            <value>
+                <stringValue>Take some time to relax and recharge - Plan Time off</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Status</name>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Priority</name>
+            <value>
+                <stringValue>Normal</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>OwnerId</name>
+            <value>
+                <elementReference>recordOwnerId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>NewTask</nameSegment>
+    </actionCalls>
+    <apiVersion>63.0</apiVersion>
+    <decisions>
+        <description>Routes Flow based on Applications Status value</description>
+        <name>Check_Application_Status</name>
+        <label>Check Application Status</label>
+        <locationX>974</locationX>
+        <locationY>323</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Is_Applying</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Status__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Applying</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Find_Someone_at_the_Company</targetReference>
+            </connector>
+            <label>Is Applying</label>
+        </rules>
+        <rules>
+            <name>Is_Applied</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Status__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Applied</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Reach_out_to_the_hiring_manager_or_recruiter_Applied</targetReference>
+            </connector>
+            <label>Is Applied</label>
+        </rules>
+        <rules>
+            <name>Is_Interviewing</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Status__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Interviewing</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Create_Prepare_for_Interview_Task</targetReference>
+            </connector>
+            <label>Is Interviewing</label>
+        </rules>
+        <rules>
+            <name>Is_Negotiating</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Status__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Negotiating</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Create_Review_Offer_Task_Negotiating</targetReference>
+            </connector>
+            <label>Is Negotiating</label>
+        </rules>
+        <rules>
+            <name>Is_Accepted</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Status__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Accepted</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Plan_your_resignation_if_applicable</targetReference>
+            </connector>
+            <label>Is Accepted</label>
+        </rules>
+        <rules>
+            <name>Is_Saved</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Status__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Saved</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Check_Job_Description_Saved</targetReference>
+            </connector>
+            <label>Is Saved</label>
+        </rules>
+        <rules>
+            <name>Is_Closed</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Status__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Closed</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Send_a_follow_up_email_thanking_the_interviewer_Closed</targetReference>
+            </connector>
+            <label>Is Closed</label>
+        </rules>
+    </decisions>
+    <description>This flow creates tasks for each job application based on each job applications status value</description>
+    <environments>Default</environments>
+    <formulas>
+        <description>Calculates the date to 3 days later</description>
+        <name>DueDatePlus3</name>
+        <dataType>Date</dataType>
+        <expression>TODAY() + 3</expression>
+    </formulas>
+    <formulas>
+        <description>adds seven days to the current date</description>
+        <name>DueDatePlus7</name>
+        <dataType>Date</dataType>
+        <expression>Today () + 7</expression>
+    </formulas>
+    <formulas>
+        <description>Today&apos;s date</description>
+        <name>DueToday</name>
+        <dataType>Date</dataType>
+        <expression>Today ()</expression>
+    </formulas>
+    <formulas>
+        <description>Work around to pass record id into task</description>
+        <name>recordId</name>
+        <dataType>String</dataType>
+        <expression>{!$Record.Id}</expression>
+    </formulas>
+    <formulas>
+        <description>Work around for issue passing Record owner id value to tasks</description>
+        <name>recordOwnerId</name>
+        <dataType>String</dataType>
+        <expression>{!$Record.OwnerId}</expression>
+    </formulas>
+    <interviewLabel>Job Application Status Flows {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Job Application Status Flows</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>848</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Check_Application_Status</targetReference>
+        </connector>
+        <filterFormula>OR(
+    ISCHANGED({!$Record.Status__c}),
+    ISPICKVAL({!$Record.Status__c}, &quot;Applying&quot;),
+    ISPICKVAL({!$Record.Status__c}, &quot;Applied&quot;),
+    ISPICKVAL({!$Record.Status__c}, &quot;Interviewing&quot;),
+    ISPICKVAL({!$Record.Status__c}, &quot;Negotiating&quot;),
+    ISPICKVAL({!$Record.Status__c}, &quot;Accepted&quot;),
+    ISPICKVAL({!$Record.Status__c}, &quot;Saved&quot;),
+    ISPICKVAL({!$Record.Status__c}, &quot;Closed&quot;)
+)</filterFormula>
+        <object>Job_Application__c</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>
