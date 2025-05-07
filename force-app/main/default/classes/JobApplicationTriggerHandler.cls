@@ -501,4 +501,15 @@ public class JobApplicationTriggerHandler {
             insert tasksToInsert;
         }
     }
+
+    //Code to be used with Button in Salesforce
+    public static void runManualTaskLogic() {
+        try {
+            // Call the getJobs method from the USAJobsService class
+            USAJobsService.getJobs();
+            System.debug('Successfully called USAJobsService.getJobs() to insert job applications.');
+        } catch (Exception e) {
+            System.debug('Error calling USAJobsService.getJobs(): ' + e.getMessage());
+        }
+    }            
 }
