@@ -70,101 +70,131 @@ public class JobApplicationTriggerHandler {
     }
 
     // Specific handler for 'Saved' Status
-    private static void handleSaved(Job_Application__c jobApp) {
-        System.debug('Handling Saved status for Job Application: ' + jobApp.Id);
-        /**Primary Contact Check Section */
-        // Check if Primary Contact is currently not set
-        if (jobApp.Primary_Contact__c == null) {
-            System.debug('Primary Contact is empty. Attempting to auto-assign...');
+    private static void handleSaved(List<Job_Application__c> jobApps) {
+        System.debug('Handling Saved status for Job Applications: ' + jobApps.size());
 
-            // Ensure that the Job Application is related to an Account
-            if (jobApp.Company_Name__c != null) {
-                // Query the first Contact on the Account with Contact_Type__c = 'Primary Contact',
-                // ordered by CreatedDate ascending (oldest first)
-                List<Contact> contacts = [
-                    SELECT Id, Name
-                    FROM Contact
-                    WHERE AccountId = :jobApp.Company_Name__c
-                    AND Contact_Type__c = 'Primary Contact'
-                    ORDER BY CreatedDate DESC
-                    LIMIT 1
-                ];
-
-                // If a matching Contact was found, assign it to the Primary Contact field
-                if (!contacts.isEmpty()) {
-                    jobApp.Primary_Contact__c = contacts[0].Id;
-                    System.debug('Auto-assigned Primary Contact: ' + contacts[0].Id);
-                } else {
-                    System.debug('No Primary Contact found. Looking for any Contact on the Company (Account)...');
-
-                    // No Primary Contact found, now fetch the newest Contact without Contact_Type__c condition
-                    List<Contact> anyContacts = [
-                        SELECT Id, Name
-                        FROM Contact
-                        WHERE AccountId = :jobApp.Company_Name__c
-                        ORDER BY CreatedDate DESC
-                        LIMIT 1
-                    ];
-
-                    if (!anyContacts.isEmpty()) {
-                        // Found a general Contact, assign it
-                        jobApp.Primary_Contact__c = anyContacts[0].Id;
-                        System.debug('Auto-assigned Primary Contact (any Contact): ' + anyContacts[0].Id);
-                    } else {
-                        // No Contacts at all found on the Company (Account)
-                        System.debug('No Contacts found on Company (Account): ' + jobApp.Company_Name__c);
-                    }
-                }
-            } else {
-                // The Job Application does not have a related Account
-                System.debug('Job Application has no related Account.');
+        // Collect all related Account IDs from the Job Applications
+        Set<Id> accountIds = new Set<Id>();
+        for (Job_Application__c jobApp : jobApps) {
+            if (String.isNotBlank(jobApp.Company_Name__c)) {
+                accountIds.add(jobApp.Company_Name__c);
             }
         }
 
-
-        /*Task Creation Section */
-        List<Task> tasksToInsert = new List<Task>();
-
-        // Task 1: Check if the job description aligns with your interests and values
-        Task task1 = new Task(
-            WhatId = jobApp.Id,
-            OwnerId = jobApp.OwnerId,
-            Subject = 'Review Job Description',
-            Description = 'Check if the job description aligns with your interests and values',
-            Status = 'Not Started',
-            Priority = 'Normal',
-            ActivityDate = Date.today() // Set Due Date to today's date
-        );
-        tasksToInsert.add(task1);
-
-        // Task 2: Review the highlighted skills to see if the role is a good fit
-        Task task2 = new Task(
-            WhatId = jobApp.Id,
-            OwnerId = jobApp.OwnerId,
-            Subject = 'Review Highlighted Skills',
-            Description = 'Review the highlighted skills to see if the role is a good fit',
-            Status = 'Not Started',
-            Priority = 'Normal',
-            ActivityDate = Date.today() // Set Due Date to today's date
-        );
-        tasksToInsert.add(task2);
-
-        // Task 3: Research the company or role and mark your excitement level
-        Task task3 = new Task(
-            WhatId = jobApp.Id,
-            OwnerId = jobApp.OwnerId,
-            Subject = 'Research Company and Role',
-            Description = 'Research the company or role and mark your excitement level',
-            Status = 'Not Started',
-            Priority = 'Normal',
-            ActivityDate = Date.today() // Set Due Date to today's date
-        );
-        tasksToInsert.add(task3);
-
-        if (!tasksToInsert.isEmpty()) {
-            insert tasksToInsert;
+        // Prefetch all related Contacts grouped by AccountId
+        Map<Id, List<Contact>> accountIdToContacts = new Map<Id, List<Contact>>();
+        if (!accountIds.isEmpty()) {
+            for (Contact con : [
+                SELECT Id, Name, AccountId, Contact_Type__c, CreatedDate
+                FROM Contact
+                WHERE AccountId IN :accountIds
+                ORDER BY CreatedDate DESC // Newest first for general contact
+            ]) {
+                if (!accountIdToContacts.containsKey(con.AccountId)) {
+                    accountIdToContacts.put(con.AccountId, new List<Contact>());
+                }
+                accountIdToContacts.get(con.AccountId).add(con);
+            }
         }
 
+        // List to hold updated Job Application records
+        List<Job_Application__c> appsToUpdate = new List<Job_Application__c>();
+
+        for (Job_Application__c jobApp : jobApps) {
+            System.debug('Handling Saved status for Job Application: ' + jobApp.Id);
+
+            // Primary Contact Check Section
+            if (jobApp.Primary_Contact__c == null && String.isNotBlank(jobApp.Company_Name__c)) {
+                List<Contact> relatedContacts = accountIdToContacts.get(jobApp.Company_Name__c);
+
+                if (relatedContacts != null && !relatedContacts.isEmpty()) {
+                    Contact primaryContact = null;
+                    Contact generalContact = null;
+
+                    // Find the most recent 'Primary Contact'
+                    for (Contact con : relatedContacts) {
+                        if (con.Contact_Type__c == 'Primary Contact') {
+                            primaryContact = con;
+                            break; // Found the primary, no need to continue searching for primary
+                        }
+                        if (generalContact == null) {
+                            generalContact = con; // Keep track of the newest general contact
+                        }
+                    }
+
+                    if (primaryContact != null) {
+                        jobApp.Primary_Contact__c = primaryContact.Id;
+                        System.debug('Auto-assigned Primary Contact: ' + primaryContact.Id);
+                        appsToUpdate.add(new Job_Application__c(Id = jobApp.Id, Primary_Contact__c = primaryContact.Id));
+                    } else if (generalContact != null) {
+                        jobApp.Primary_Contact__c = generalContact.Id;
+                        System.debug('Auto-assigned Primary Contact (any Contact): ' + generalContact.Id);
+                        appsToUpdate.add(new Job_Application__c(Id = jobApp.Id, Primary_Contact__c = generalContact.Id));
+                    } else {
+                        System.debug('No Contacts found on Company (Account): ' + jobApp.Company_Name__c);
+                    }
+                } else {
+                    System.debug('No Contacts found for Account ID: ' + jobApp.Company_Name__c);
+                }
+            } else if (jobApp.Primary_Contact__c != null) {
+                System.debug('Primary Contact is already set: ' + jobApp.Primary_Contact__c);
+            } else if (String.isBlank(jobApp.Company_Name__c)) {
+                System.debug('Job Application has no related Account.');
+            }
+
+            /*Task Creation Section */
+            List<Task> tasksToInsert = new List<Task>();
+
+            // Task 1: Check if the job description aligns with your interests and values
+            Task task1 = new Task(
+                WhatId = jobApp.Id,
+                OwnerId = jobApp.OwnerId,
+                Subject = 'Review Job Description',
+                Description = 'Check if the job description aligns with your interests and values',
+                Status = 'Not Started',
+                Priority = 'Normal',
+                ActivityDate = Date.today() // Set Due Date to today's date
+            );
+            tasksToInsert.add(task1);
+
+            // Task 2: Review the highlighted skills to see if the role is a good fit
+            Task task2 = new Task(
+                WhatId = jobApp.Id,
+                OwnerId = jobApp.OwnerId,
+                Subject = 'Review Highlighted Skills',
+                Description = 'Review the highlighted skills to see if the role is a good fit',
+                Status = 'Not Started',
+                Priority = 'Normal',
+                ActivityDate = Date.today() // Set Due Date to today's date
+            );
+            tasksToInsert.add(task2);
+
+            // Task 3: Research the company or role and mark your excitement level
+            Task task3 = new Task(
+                WhatId = jobApp.Id,
+                OwnerId = jobApp.OwnerId,
+                Subject = 'Research Company and Role',
+                Description = 'Research the company or role and mark your excitement level',
+                Status = 'Not Started',
+                Priority = 'Normal',
+                ActivityDate = Date.today() // Set Due Date to today's date
+            );
+            tasksToInsert.add(task3);
+
+            if (!tasksToInsert.isEmpty()) {
+                insert tasksToInsert;
+            }
+        }
+
+        // Perform a single update for all modified Job Application records
+        if (!appsToUpdate.isEmpty()) {
+            try {
+                update appsToUpdate;
+                System.debug('Updated Primary Contact for ' + appsToUpdate.size() + ' Job Applications.');
+            } catch (DmlException e) {
+                System.debug('Error updating Job Applications: ' + e.getMessage());
+            }
+        }
     }
 
     // Specific handler for 'Applying' Status
