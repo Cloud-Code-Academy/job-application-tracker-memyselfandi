@@ -6,7 +6,7 @@
     <inlineHelpText>Enter detailed information about the job, inlcude responsibilities and minimum requirements</inlineHelpText>
     <label>Description</label>
     <length>32768</length>
-    <trackHistory>false</trackHistory>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>LongTextArea</type>
     <visibleLines>3</visibleLines>

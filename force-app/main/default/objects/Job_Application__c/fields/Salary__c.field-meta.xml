@@ -9,7 +9,7 @@
     <precision>8</precision>
     <required>true</required>
     <scale>0</scale>
-    <trackHistory>false</trackHistory>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Currency</type>
 </CustomField>

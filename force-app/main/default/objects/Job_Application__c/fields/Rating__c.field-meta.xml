@@ -6,7 +6,7 @@
     <inlineHelpText>Rating: A picklist or numerical field to rate the attractiveness of the job on a predetermined scale, for example, 1-5.</inlineHelpText>
     <label>Rating</label>
     <required>false</required>
-    <trackHistory>false</trackHistory>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Picklist</type>
     <valueSet>

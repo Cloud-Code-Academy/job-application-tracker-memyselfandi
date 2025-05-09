@@ -6,7 +6,7 @@
     <inlineHelpText>Enter the URL where the job is posted</inlineHelpText>
     <label>Job URL</label>
     <required>false</required>
-    <trackHistory>false</trackHistory>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Url</type>
 </CustomField>

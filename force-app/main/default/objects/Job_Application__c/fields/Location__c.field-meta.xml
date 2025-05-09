@@ -6,7 +6,7 @@
     <inlineHelpText>field to indicate the job location or if it&apos;s remote.</inlineHelpText>
     <label>Location</label>
     <required>false</required>
-    <trackHistory>false</trackHistory>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Picklist</type>
     <valueSet>

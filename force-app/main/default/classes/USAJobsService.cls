@@ -4,6 +4,8 @@ public class USAJobsService {
 
     // Main method to initiate an HTTP GET callout to the USAJOBS API
     public static void getJobs() {
+        System.debug('Fetching jobs from USAJOBS API...');
+
         HttpRequest req = new HttpRequest();    // Create the request
         Http http = new Http();                // Create the HTTP client
 
@@ -231,7 +233,7 @@ public class USAJobsService {
                         String minSalaryStr = (String) salaryInfo.get('MinimumRange');
                         try {
                             salary = Decimal.valueOf(minSalaryStr);
-                        } catch (Exception e) {
+                        } catch (Exception fe) {
                             salary = null; // Set to null if not convertible
                         }
                     }
@@ -317,7 +319,7 @@ public class USAJobsService {
     public static void printJobInfo() {
         // Check if the parsedJobs list is empty
         if (parsedJobs.isEmpty()) {
-            System.debug('No jobs to display.'); // Log message if no jobs found
+            System.debug('No jobs to display, parsedJobs was Empty.'); // Log message if no jobs found
             return; // Exit the method early
         }
     
