@@ -290,17 +290,38 @@ public class JobApplicationTriggerHandler {
         );
         tasksToInsert.add(task4);
 
-        // Update Application_Date__c and Follow_Up_Date__c fields
-        // Note: You cannot directly update the `jobApp` record here as it's passed by value.
-        // If you need to update the record in the database based on the 'Applied' status,
-        // you would typically perform a DML update outside the trigger context or handle
-        // it carefully within the trigger execution. For testing purposes, you can
-        // assert that these updates *would* happen if this logic were executed.
-        System.debug('Simulating update to Application_Date__c and Follow_Up_Date__c');
-
         if (!tasksToInsert.isEmpty()) {
             insert tasksToInsert;
         }
+
+        // Prepare a list to hold the Job Application records to update
+        List<Job_Application__c> appsToUpdate = new List<Job_Application__c>();
+
+        // Create a new instance to update, setting the ID to the current jobApp's ID
+        Job_Application__c updatedApp = new Job_Application__c(Id = jobApp.Id);
+
+        // Update the Application_Date__c field (if it's not already set or needs updating)
+        if (updatedApp.Application_Date__c == null) {
+            updatedApp.Application_Date__c = Date.today();
+        }
+
+        // Set the Follow_Up_Date__c field (you might want to set this to a future date)
+        updatedApp.Follow_Up_Date__c = Date.today().addDays(3); // Example: Follow up in 7 days
+
+        // Add the updated record to the list
+        appsToUpdate.add(updatedApp);
+
+        // Perform the update ONLY if there are records to update
+        if (!appsToUpdate.isEmpty()) {
+            try {
+                update appsToUpdate;
+                System.debug('Updated Application_Date__c and Follow_Up_Date__c for Job Application: ' + jobApp.Id);
+            } catch (DmlException e) {
+                // It's crucial to handle DML exceptions properly
+                System.debug('Error updating Job Application: ' + e.getMessage());
+            }
+        }
+    }
     }
 
     // Specific handler for 'Interviewing' Status
