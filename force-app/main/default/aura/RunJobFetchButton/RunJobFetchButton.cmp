@@ -1,0 +1,13 @@
+<aura:component 
+    implements="force:lightningQuickAction,force:hasRecordId" 
+    controller="JobApplicationActionController">
+
+    <!-- Attribute to hold the recordId passed by the Lightning record page -->
+    <aura:attribute name="recordId" type="Id" />
+
+    <!-- This handler runs the controller logic when the component is initialized -->
+    <aura:handler name="init" value="{!this}" action="{!c.runLogic}" />
+
+    <!-- A loading spinner that can be shown/hidden during async operations (not currently toggled) -->
+    <lightning:spinner aura:id="spinner" />
+</aura:component>
